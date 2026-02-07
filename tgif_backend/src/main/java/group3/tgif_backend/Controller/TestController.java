@@ -3,8 +3,10 @@ package group3.tgif_backend.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+@CrossOrigin(origins = "http://localhost:3001")
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("")
 public class TestController {
 
     @GetMapping("/hello")
@@ -23,5 +25,6 @@ public class TestController {
     public String echogreeting(@RequestBody String username){
         return "You are highly welcome: " + username;
     }
+
 }
 
