@@ -14,7 +14,7 @@ export function Footer() {
 export function Header() { 
     return (
         <header>
-            <h1>Welcome to My App Zhara</h1>
+            <h1>Welcome to My App Zhara and Frank</h1>
         </header>
     )
 }
