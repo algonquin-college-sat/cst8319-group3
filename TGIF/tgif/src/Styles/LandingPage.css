@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.landing-container {
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lang-toggle button {
+  margin-left: 5px;
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.lang-toggle .active {
+  background-color: #ff9933;
+  color: white;
+}
+
+.events-section {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.event-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
