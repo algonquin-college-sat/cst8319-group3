@@ -23,6 +23,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-container">
+
       <header>
         <h1>The Great Indian Festival</h1>
         <LanguageToggle language={language} setLanguage={setLanguage} />
