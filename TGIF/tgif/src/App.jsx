@@ -3,6 +3,11 @@ import { Route,Routes } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage";
 import CalendarPage from "./Pages/CalenderPage";
 import EventDetailsPage from "./Pages/EventDetailsPage";
+import RegistrationPage from "./Pages/RegistrationPage";
+import VolunteerRegistration from "./Pages/VolunteerRegistration";
+import ArtistRegistration from "./Pages/ArtistRegistration";
+import AboutPage from "./Pages/AboutPage";
+import GalleryPage from "./Pages/GalleryPage";
 
 function App() {
     return (
@@ -10,6 +15,12 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/events/:id" element={<EventDetailsPage />} />
+       <Route path="/register/:id" element={<RegistrationPage />} />
+      <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/volunteer" element={<VolunteerRegistration />} />
+      <Route path="/artist" element={<ArtistRegistration />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/gallery" element={<GalleryPage />} />
     </Routes>
   ) 
 }
