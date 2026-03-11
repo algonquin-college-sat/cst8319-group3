@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import LanguageToggle from "./LanguageToggle";
 
 export default function Navbar() {
   return (

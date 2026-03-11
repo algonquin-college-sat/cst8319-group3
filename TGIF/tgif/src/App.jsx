@@ -1,5 +1,6 @@
 import React from "react";
 import { Route,Routes } from "react-router-dom";
+import Navbar from "./Component/Navbar";  
 import LandingPage from "./Pages/LandingPage";
 import CalendarPage from "./Pages/CalenderPage";
 import EventDetailsPage from "./Pages/EventDetailsPage";
@@ -11,6 +12,8 @@ import GalleryPage from "./Pages/GalleryPage";
 
 function App() {
     return (
+      <>
+    <Navbar />
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
@@ -22,6 +25,7 @@ function App() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/gallery" element={<GalleryPage />} />
     </Routes>
+    </>
   ) 
 }
 

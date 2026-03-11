@@ -1,0 +1,32 @@
+.about-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.about-container h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #b22222;
+}
+
+.about-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.about-highlights h2 {
+  margin-top: 2rem;
+  color: #b22222;
+}
+
+.about-highlights ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.about-highlights li {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
