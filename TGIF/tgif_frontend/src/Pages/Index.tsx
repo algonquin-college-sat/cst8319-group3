@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import UpcomingEvents from '../components/UpcomingEvents';
-import EventCalendar from '../components/EventCalender';
-import KeynoteSpeakers from '../components/KeynoteSpeaker';
-import { useLanguage } from '../Context/useLanguage';
+import EventCalendar from '../components/EventCalendar';
+import KeynoteSpeakers from '../components/KeynoteSpeakers';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/footer.css';
 
 const Footer: React.FC = () => {

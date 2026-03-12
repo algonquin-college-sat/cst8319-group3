@@ -1,21 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../context/LanguageContext';
+import { createClient } from '@metagptx/web-sdk';
 import '../styles/pages.css';
 import '../styles/footer.css';
 
+const client = createClient();
+
+interface EventData {
+  id: number;
+  title_en: string;
+  title_fr: string;
+}
+
 const Volunteer: React.FC = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const [events, setEvents] = useState<EventData[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     role: '',
+    eventId: '',
     experience: '',
     availability: '',
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await client.entities.events.query({ query: {}, limit: 100, fields: ['id', 'title_en', 'title_fr'] });
+        if (res?.data?.items) setEvents(res.data.items);
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const roles = [
     {
@@ -97,9 +121,41 @@ const Volunteer: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      // Check if user is logged in
+      let isLoggedIn = false;
+      try {
+        const userRes = await client.auth.me();
+        if (userRes?.data) isLoggedIn = true;
+      } catch {
+        // Not logged in
+      }
+
+      if (isLoggedIn) {
+        const eventId = formData.eventId ? parseInt(formData.eventId) : (events.length > 0 ? events[0].id : 1);
+        await client.entities.volunteers.create({
+          data: {
+            event_id: eventId,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            role: formData.role || null,
+            created_at: new Date().toISOString(),
+          },
+        });
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      console.error('Volunteer signup error:', err);
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -204,7 +260,7 @@ const Volunteer: React.FC = () => {
                     'Nous examinerons votre candidature et vous contacterons bientôt avec les prochaines étapes.'
                   )}
                 </p>
-                <button className="page-btn-primary" onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', role: '', experience: '', availability: '', message: '' }); }}>
+                <button className="page-btn-primary" onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', role: '', eventId: '', experience: '', availability: '', message: '' }); }}>
                   {t('Submit Another Application', 'Soumettre une Autre Candidature')}
                 </button>
               </div>
@@ -238,15 +294,25 @@ const Volunteer: React.FC = () => {
                       </select>
                     </div>
                     <div className="form-group">
-                      <label>{t('Availability', 'Disponibilité')} *</label>
-                      <select name="availability" value={formData.availability} onChange={handleInputChange} required>
-                        <option value="">{t('Select availability', 'Sélectionnez la disponibilité')}</option>
-                        <option value="weekends">{t('Weekends Only', 'Fins de Semaine Seulement')}</option>
-                        <option value="weekdays">{t('Weekdays Only', 'Jours de Semaine Seulement')}</option>
-                        <option value="flexible">{t('Flexible', 'Flexible')}</option>
-                        <option value="event-day">{t('Event Days Only', 'Jours d\'Événement Seulement')}</option>
+                      <label>{t('Event', 'Événement')} *</label>
+                      <select name="eventId" value={formData.eventId} onChange={handleInputChange} required>
+                        <option value="">{t('Select an event', 'Sélectionnez un événement')}</option>
+                        {events.map((ev) => (
+                          <option key={ev.id} value={ev.id}>{language === 'en' ? ev.title_en : ev.title_fr}</option>
+                        ))}
                       </select>
                     </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{t('Availability', 'Disponibilité')} *</label>
+                    <select name="availability" value={formData.availability} onChange={handleInputChange} required>
+                      <option value="">{t('Select availability', 'Sélectionnez la disponibilité')}</option>
+                      <option value="weekends">{t('Weekends Only', 'Fins de Semaine Seulement')}</option>
+                      <option value="weekdays">{t('Weekdays Only', 'Jours de Semaine Seulement')}</option>
+                      <option value="flexible">{t('Flexible', 'Flexible')}</option>
+                      <option value="event-day">{t('Event Days Only', 'Jours d\'Événement Seulement')}</option>
+                    </select>
                   </div>
 
                   <div className="form-group">
@@ -259,8 +325,8 @@ const Volunteer: React.FC = () => {
                     <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder={t('Share your motivation...', 'Partagez votre motivation...')} />
                   </div>
 
-                  <button type="submit" className="page-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    {t('Submit Application', 'Soumettre la Candidature')}
+                  <button type="submit" className="page-btn-primary" disabled={submitting} style={{ width: '100%', justifyContent: 'center' }}>
+                    {submitting ? t('Submitting...', 'Soumission...') : t('Submit Application', 'Soumettre la Candidature')}
                   </button>
                 </form>
               </div>

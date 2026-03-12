@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../Context/LanguageContext';
 import '../styles/pages.css';
 import '../styles/footer.css';
 

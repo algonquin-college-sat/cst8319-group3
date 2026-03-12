@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/hero.css';
 
 const HeroSection: React.FC = () => {

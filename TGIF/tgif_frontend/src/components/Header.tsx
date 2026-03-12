@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/header.css';
 
 interface NavLink {
@@ -32,6 +32,7 @@ const Header: React.FC = () => {
         { href: '/history', label_en: 'History', label_fr: 'Histoire', isRoute: true },
         { href: '/sponsors', label_en: 'Sponsors', label_fr: 'Commanditaires', isRoute: true },
         { href: '/volunteer', label_en: 'Volunteer', label_fr: 'Bénévole', isRoute: true },
+        { href: '/admin', label_en: '⚙️ Admin', label_fr: '⚙️ Admin', isRoute: true },
       ];
 
   return (

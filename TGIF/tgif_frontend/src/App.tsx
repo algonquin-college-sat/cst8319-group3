@@ -1,24 +1,18 @@
-import { Toaster } from './components/ui/sonner';
-import LandingPage from './Pages/LandingPage';
-import CalendarPage from "./Pages/CalenderPage";
-import EventDetailsPage from "./Pages/EventDetailsPage";
-import RegisterPage from "./Pages/RegisterPage";
-
-import './App.css'
-import { TooltipProvider } from './components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { LanguageProvider } from './Context/LanguageProvider';
-import  Index from './Pages/Index';
+import { LanguageProvider } from './Context/LanguageContext';
+import Index from './Pages/Index';
 import About from './Pages/About';
 import Registration from './Pages/Registration';
 import History from './Pages/History';
-import Sponsors from './Pages/Sponsor';
+import Sponsors from './Pages/Sponsors';
 import Volunteer from './Pages/Volunteer';
+import Admin from './Pages/Admin';
 import AuthCallback from './Pages/AuthCallback';
 import AuthError from './Pages/AuthError';
 import NotFound from './Pages/NotFound';
-
 // MODULE_IMPORTS_START
 // MODULE_IMPORTS_END
 
@@ -34,17 +28,14 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/landingpage" element={<LandingPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/history" element={<History />} />
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/volunteer" element={<Volunteer />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/error" element={<AuthError />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/events/:id" element={<EventDetailsPage />} />
-            <Route path="/register/:eventId" element={<RegisterPage />} />
             {/* MODULE_ROUTES_START */}
             {/* MODULE_ROUTES_END */}
             <Route path="*" element={<NotFound />} />
@@ -57,5 +48,3 @@ const App = () => (
 );
 
 export default App;
-
-

@@ -199,10 +199,55 @@
 .btn-coming-soon {
   background: #F3F4F6;
   color: #6B7280;
+  cursor: not-allowed;
 }
 
 .btn-coming-soon:hover {
   background: #E5E7EB;
+}
+
+/* Registration Countdown Banner */
+.reg-countdown-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.06), rgba(255, 107, 0, 0.06));
+  border: 1px solid rgba(231, 76, 60, 0.15);
+  border-radius: 10px;
+  animation: regPulse 2s ease-in-out infinite;
+}
+
+@keyframes regPulse {
+  0%, 100% { border-color: rgba(231, 76, 60, 0.15); }
+  50% { border-color: rgba(231, 76, 60, 0.35); }
+}
+
+.reg-countdown-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.reg-countdown-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reg-countdown-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reg-countdown-time {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #E74C3C;
 }
 
 /* Mobile Responsive */

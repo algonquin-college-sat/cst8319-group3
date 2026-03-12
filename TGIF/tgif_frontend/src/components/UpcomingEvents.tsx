@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../Context/useLanguage';
 import { useNavigate } from 'react-router-dom';
-import { mockEvents } from '../Data/mockData';
+import { useLanguage } from '../context/LanguageContext';
+import { createClient } from '@metagptx/web-sdk';
 import '../styles/events.css';
+
+const client = createClient();
+
+interface EventData {
+  id: number;
+  title_en: string;
+  title_fr: string;
+  description_en?: string;
+  description_fr?: string;
+  date: string;
+  time: string;
+  venue_en?: string;
+  venue_fr?: string;
+  event_type: string;
+  price?: number | null;
+  currency?: string;
+  registration_open?: boolean;
+  registration_opens_date?: string;
+  category_en?: string;
+  category_fr?: string;
+  image_url?: string;
+}
 
 interface CountdownTime {
   days: number;
@@ -30,27 +52,66 @@ const UpcomingEvents: React.FC = () => {
   const { t, getField } = useLanguage();
   const navigate = useNavigate();
   const [countdowns, setCountdowns] = useState<Record<number, CountdownTime>>({});
+  const [events, setEvents] = useState<EventData[]>([]);
 
-  const upcomingEvents = mockEvents
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await client.entities.events.query({ query: {}, sort: 'date', limit: 100 });
+        if (res?.data?.items) {
+          setEvents(res.data.items);
+        }
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const upcomingEvents = events
     .filter((e) => new Date(e.date).getTime() > new Date().getTime())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 4);
 
+  const [regCountdowns, setRegCountdowns] = useState<Record<number, CountdownTime>>({});
+
   useEffect(() => {
+    if (upcomingEvents.length === 0) return;
+
     const updateCountdowns = () => {
       const newCountdowns: Record<number, CountdownTime> = {};
+      const newRegCountdowns: Record<number, CountdownTime> = {};
       upcomingEvents.forEach((event) => {
         newCountdowns[event.id] = getCountdown(event.date);
+        const regOpenDate = new Date(event.date);
+        regOpenDate.setDate(regOpenDate.getDate() - 30);
+        newRegCountdowns[event.id] = getCountdown(regOpenDate.toISOString());
       });
       setCountdowns(newCountdowns);
+      setRegCountdowns(newRegCountdowns);
     };
 
     updateCountdowns();
     const interval = setInterval(updateCountdowns, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [events]);
 
-    const handleRegisterClick = (eventId: number) => {
+  const isRegistrationOpen = (eventDate: string): boolean => {
+    const now = new Date();
+    const event = new Date(eventDate);
+    const diffMs = event.getTime() - now.getTime();
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    return diffDays >= 0 && diffDays <= 30;
+  };
+
+  const getRegistrationOpenDate = (eventDate: string): Date => {
+    const event = new Date(eventDate);
+    const openDate = new Date(event);
+    openDate.setDate(openDate.getDate() - 30);
+    return openDate;
+  };
+
+  const handleRegisterClick = (eventId: number) => {
     navigate(`/registration?eventId=${eventId}`);
   };
 
@@ -58,14 +119,14 @@ const UpcomingEvents: React.FC = () => {
     <section id="events" className="events-section">
       <div className="section-container">
         <div className="section-header">
-          <span className="section-tag">{t('Don\'t Miss Out', 'Ne Manquez Pas')}</span>
+          <span className="section-tag">{t("Don't Miss Out", 'Ne Manquez Pas')}</span>
           <h2 className="section-title">
             {t('Upcoming Events', 'Événements à Venir')}
           </h2>
           <p className="section-description">
             {t(
-              'Discover our next celebrations. Registration opens 15 days before each event.',
-              'Découvrez nos prochaines célébrations. L\'inscription ouvre 15 jours avant chaque événement.'
+              'Discover our next celebrations. Registration opens 30 days before each event.',
+              "Découvrez nos prochaines célébrations. L'inscription ouvre 30 jours avant chaque événement."
             )}
           </p>
         </div>
@@ -134,13 +195,31 @@ const UpcomingEvents: React.FC = () => {
                     </div>
                   )}
 
+                  {!isRegistrationOpen(event.date) && regCountdowns[event.id] && (
+                    <div className="reg-countdown-banner">
+                      <span className="reg-countdown-icon">🔒</span>
+                      <div className="reg-countdown-text">
+                        <span className="reg-countdown-label">
+                          {t('Registration opens in', "L'inscription ouvre dans")}
+                        </span>
+                        <span className="reg-countdown-time">
+                          {regCountdowns[event.id].days > 0 && (
+                            <>{regCountdowns[event.id].days} {t('days', 'jours')} </>
+                          )}
+                          {regCountdowns[event.id].hours} {t('hrs', 'hrs')} {regCountdowns[event.id].minutes} {t('min', 'min')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   <button
-                    className={`event-card-btn ${event.registration_open ? 'btn-register' : 'btn-coming-soon'}`}
-                    onClick={() => handleRegisterClick(event.id)}
+                    className={`event-card-btn ${isRegistrationOpen(event.date) ? 'btn-register' : 'btn-coming-soon'}`}
+                    onClick={() => isRegistrationOpen(event.date) && handleRegisterClick(event.id)}
+                    disabled={!isRegistrationOpen(event.date)}
                   >
-                    {event.registration_open
-                      ? t('Register Now', 'S\'inscrire')
-                      : t('Registration Opens Soon', 'Inscription Bientôt')}
+                    {isRegistrationOpen(event.date)
+                      ? t('Register Now', "S'inscrire")
+                      : t('Registration Locked', 'Inscription Verrouillée')}
                   </button>
                 </div>
               </div>
