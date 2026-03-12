@@ -1,52 +1,69 @@
 package group3.tgif_backend.Controller;
 
-
-
-import group3.tgif_backend.DTO.EventDTO;
+import group3.tgif_backend.DTO.EventData;
+import group3.tgif_backend.Model.Event;
 import group3.tgif_backend.Services.EventService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
-@RequiredArgsConstructor
+@RequestMapping("/api/event")
 @CrossOrigin
 public class EventController {
 
-    private final EventService eventService;
+    @Autowired
+    private EventService eventService;
 
-    // Public
-    @GetMapping("/events")
-    public List<EventDTO> getAllEvents() {
-        return eventService.getAllEvents();
+    @GetMapping
+    public List<Event> list(@RequestParam(defaultValue = "0") int skip,
+                            @RequestParam(defaultValue = "20") int limit) {
+        return eventService.getList(skip, limit);
     }
 
-    @GetMapping("/events/upcoming")
-    public List<EventDTO> getUpcomingEvents() {
-        return eventService.getUpcomingEvents();
+    @GetMapping("/{id}")
+    public Event get(@PathVariable Integer id) {
+        return eventService.getById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/events/{id}")
-    public EventDTO getEventById(@PathVariable Long id) {
-        return eventService.getEventById(id);
+    @PostMapping("/new")
+    public Event create(@RequestBody EventData data) {
+        return eventService.create(data);
     }
 
-    // Admin (secure later)
-    @PostMapping("/admin/events")
-    public EventDTO createEvent(@RequestBody EventDTO dto) {
-        return eventService.createEvent(dto);
+    @PutMapping("/{id}")
+    public Event update(@PathVariable Integer id, @RequestBody EventData data) {
+        return eventService.update(id, data)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/admin/events/{id}")
-    public EventDTO updateEvent(@PathVariable Long id,
-                                @RequestBody EventDTO dto) {
-        return eventService.updateEvent(id, dto);
+    @DeleteMapping("/{id}")
+    public Map<String, Object> delete(@PathVariable Integer id) {
+        if (!eventService.delete(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Event deleted successfully");
+        response.put("id", id);
+        return response;
     }
 
-    @DeleteMapping("/admin/events/{id}")
-    public void deleteEvent(@PathVariable Long id) {
-        eventService.deleteEvent(id);
+    @PostMapping("/batch-delete")
+    public Map<String, Object> batchDelete(@RequestBody Map<String, List<Integer>> payload) {
+        List<Integer> ids = payload.get("ids");
+        int count = 0;
+        for (Integer id : ids) {
+            if (eventService.delete(id)) count++;
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Successfully deleted " + count + " events");
+        response.put("deleted_count", count);
+        return response;
     }
 }

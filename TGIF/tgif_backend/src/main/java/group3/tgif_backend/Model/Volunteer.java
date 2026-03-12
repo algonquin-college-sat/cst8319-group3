@@ -1,17 +1,14 @@
 package group3.tgif_backend.Model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "registrations",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"email", "event_id"}))
+@Table(name = "volunteers")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Registration {
+public class Volunteer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,19 +20,18 @@ public class Registration {
     @Column(name = "event_id", nullable = false)
     private Integer eventId; //
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName; //
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName; //
+    @Column(name = "name", nullable = false)
+    private String name; //
 
     @Column(name = "email", nullable = false)
     private String email; //
 
-    @Column(name = "payment_status")
-    private String paymentStatus; //
+    @Column(name = "phone")
+    private String phone; //
+
+    @Column(name = "role")
+    private String role; //
 
     @Column(name = "created_at")
     private java.time.ZonedDateTime createdAt; //
 }
-

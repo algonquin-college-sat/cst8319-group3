@@ -1,57 +1,71 @@
 package group3.tgif_backend.Services;
 
-import group3.tgif_backend.DTO.RegistrationDTO;
-import group3.tgif_backend.Model.Event;
+import group3.tgif_backend.DTO.RegistrationData;
+import group3.tgif_backend.DTO.RegistrationUpdateData;
 import group3.tgif_backend.Model.Registration;
-import group3.tgif_backend.Repository.EventRepository;
 import group3.tgif_backend.Repository.RegistrationRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class RegistrationService {
 
-    private final RegistrationRepository registrationRepository;
-    private final EventRepository eventRepository;
+    @Autowired
+    private RegistrationRepository registrationRepository;
 
-    public RegistrationDTO register(RegistrationDTO dto) {
+    @Transactional
+    public Registration create(RegistrationData data, String userId) {
+        Registration reg = Registration.builder()
+                .userId(userId)
+                .eventId(data.getEventId())
+                .firstName(data.getFirstName())
+                .lastName(data.getLastName())
+                .email(data.getEmail())
+                .paymentStatus(data.getPaymentStatus() != null ? data.getPaymentStatus() : "pending")
+                .createdAt(data.getCreatedAt() != null ? data.getCreatedAt() : ZonedDateTime.now())
+                .build();
+        return registrationRepository.save(reg);
+    }
 
-        if (registrationRepository.existsByEmailAndEventId(dto.getEmail(), dto.getEventId())) {
-            throw new RuntimeException("User already registered for this event");
+    // 1:1 with list_by_field
+    public List<Registration> listByField(String fieldName, Object fieldValue) {
+        if ("user_id".equals(fieldName)) {
+            return registrationRepository.findByUserId((String) fieldValue);
+        } else if ("event_id".equals(fieldName)) {
+            return registrationRepository.findByEventId(Integer.parseInt(fieldValue.toString()));
         }
-
-        Event event = eventRepository.findById(dto.getEventId())
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-
-        Registration registration = Registration.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .event(event)
-                .build();
-
-        return mapToDTO(registrationRepository.save(registration));
+        return registrationRepository.findAll(); // Fallback
     }
 
-    public List<RegistrationDTO> getRegistrationsByEvent(Long eventId) {
-        return registrationRepository.findByEventId(eventId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    @Transactional
+    public Optional<Registration> update(Integer id, RegistrationUpdateData data) {
+        return registrationRepository.findById(id).map(reg -> {
+            if (data.getFirstName() != null) reg.setFirstName(data.getFirstName());
+            if (data.getLastName() != null) reg.setLastName(data.getLastName());
+            if (data.getEmail() != null) reg.setEmail(data.getEmail());
+            if (data.getPaymentStatus() != null) reg.setPaymentStatus(data.getPaymentStatus());
+            if (data.getEventId() != null) reg.setEventId(data.getEventId());
+            return registrationRepository.save(reg);
+        });
     }
 
-    private RegistrationDTO mapToDTO(Registration r) {
-        return RegistrationDTO.builder()
-                .id(r.getId())
-                .firstName(r.getFirstName())
-                .lastName(r.getLastName())
-                .email(r.getEmail())
-                .eventId(r.getEvent().getId())
-                .build();
+    @Transactional
+    public boolean delete(Integer id, String userId) {
+        // Ownership check built into the query
+        return registrationRepository.findByIdAndUserId(id, userId).map(reg -> {
+            registrationRepository.delete(reg);
+            return true;
+        }).orElse(false);
+    }
+
+    public boolean checkOwnership(Integer id, String userId) {
+        return registrationRepository.findByIdAndUserId(id, userId).isPresent();
     }
 }
-
