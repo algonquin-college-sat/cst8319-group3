@@ -1,8 +1,14 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const EventCard = ({ event, language }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/events/${event.id}`);
+  };
+
   return (
-    <div className="event-card">
+    <div  onClick={handleClick} className="event-card">
       <h2>{language === "EN" ? event.titleEn : event.titleFr}</h2>
 
       <p>
