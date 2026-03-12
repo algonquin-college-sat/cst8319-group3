@@ -11,6 +11,7 @@ import ArtistRegistration from "./Pages/ArtistRegistration";
 import AboutPage from "./Pages/AboutPage";
 import GalleryPage from "./Pages/GalleryPage";
 import EventsPage from "./Pages/EventsPage";
+import SponsorsPage from "./Pages/SponsorsPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/artist" element={<ArtistRegistration />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/sponsors" element={<SponsorsPage />} />
       </Routes>
       <Footer />
     </>

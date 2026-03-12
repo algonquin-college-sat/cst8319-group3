@@ -1,17 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const LanguageToggle = ({ language: controlledLanguage, setLanguage }) => {
-  const [internalLanguage, setInternalLanguage] = useState("EN");
+const LanguageToggle = () => {
+  const { language, setLanguage } = useLanguage();
 
-  const language = controlledLanguage ?? internalLanguage;
-
-  const handleChange = (next) => {
-    if (setLanguage) {
-      setLanguage(next);
-    } else {
-      setInternalLanguage(next);
-    }
-  };
+  const handleChange = (next) => setLanguage(next);
 
   return (
     <div className="lang-toggle">

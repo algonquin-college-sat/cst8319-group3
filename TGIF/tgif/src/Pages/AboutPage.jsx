@@ -1,175 +1,187 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./AboutPage.css";
+import { useLanguage } from "../i18n/LanguageContext";
+
+// Vibrant Indian festival / culture imagery (Pexels - royalty-free)
+const IMG_HERO =
+  "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=1600";
+const IMG_MISSION = `${process.env.PUBLIC_URL || ""}/about-mission.png`;
+const IMG_CULTURAL = `${process.env.PUBLIC_URL || ""}/cultural-performances.png`;
+const IMG_COMMUNITY =
+  "https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=600";
+const IMG_ARTISTS =
+  "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=600";
 
 const AboutPage = () => {
+  const { t } = useLanguage();
   return (
     <div className="about-page">
-
-      {/* HERO SECTION */}
-      <section className="hero-section">
-        <div className="hero-bg" />
-        <div className="hero-content">
-          <h1>About The Great India Festival</h1>
-          <p>Celebrating culture, community, and creativity since 2015.</p>
+      {/* HERO */}
+      <section className="ap-hero">
+        <div className="ap-hero-bg" style={{ backgroundImage: `url(${IMG_HERO})` }} />
+        <div className="ap-hero-overlay" />
+        <div className="ap-hero-content">
+          <h1>{t("about.heroTitle")}</h1>
+          <p>{t("about.heroSubtitle")}</p>
         </div>
       </section>
 
-      {/* MISSION SECTION */}
-      <section className="mission-section">
-        <h2>Our Mission</h2>
-        <p className="mission-text">
-          The Great India Festival (TGIFest) was born from a simple vision: to create a global stage
-          for the breathtaking diversity of Indian arts and the spirit of collective joy. We believe
-          that culture is the bridge that connects generations and communities.
-        </p>
-
-        <div className="mission-cards">
-          <div className="mission-card">
-            <div className="icon pink"></div>
-            <h3>Community Impact</h3>
-            <p>Supporting local artisans and bringing neighborhoods together through shared experiences.</p>
-          </div>
-
-          <div className="mission-card">
-            <div className="icon yellow"></div>
-            <h3>Artistic Purpose</h3>
-            <p>Reviving traditional crafts while embracing bold innovations in contemporary art.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* STORY TIMELINE */}
-      <section className="story-section">
-        <h2>Our Story</h2>
-        <p className="story-subtitle">
-          From a small gathering to a national phenomenon, follow our journey through the years.
-        </p>
-
-        <div className="timeline">
-          <div className="timeline-item">
-            <div className="circle">1</div>
-            <h4>2015 — The Spark</h4>
-            <p>Inaugural event in Jaipur with 10,000 attendees.</p>
-          </div>
-
-          <div className="timeline-item">
-            <div className="circle">2</div>
-            <h4>2018 — National Expansion</h4>
-            <p>Grew to 5 major cities across India with 200+ artists.</p>
-          </div>
-
-          <div className="timeline-item">
-            <div className="circle">3</div>
-            <h4>2021 — Digital Evolution</h4>
-            <p>Launched TGIFest Live, reaching millions globally.</p>
-          </div>
-
-          <div className="timeline-item">
-            <div className="circle">4</div>
-            <h4>2024 — Global Recognition</h4>
-            <p>Voted Top 10 Cultural Festivals globally.</p>
+      {/* MISSION */}
+      <section className="ap-section ap-mission">
+        <div className="ap-container">
+          <div className="ap-mission-layout">
+            <div className="ap-mission-text">
+              <h2>{t("about.missionTitle")}</h2>
+              <p className="ap-lead">{t("about.missionLead")}</p>
+              <div className="ap-mission-cards">
+                <div className="ap-mini-card">
+                  <span className="ap-mini-icon ap-pink" />
+                  <h3>{t("about.impactTitle")}</h3>
+                  <p>{t("about.impactText")}</p>
+                </div>
+                <div className="ap-mini-card">
+                  <span className="ap-mini-icon ap-orange" />
+                  <h3>{t("about.purposeTitle")}</h3>
+                  <p>{t("about.purposeText")}</p>
+                </div>
+              </div>
+            </div>
+            <div className="ap-mission-img">
+              <img src={IMG_MISSION} alt="Indian culture and festival" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* WHAT WE DO */}
-      <section className="what-section">
-        <h2>What We Do</h2>
-
-        <div className="what-cards">
-          <div className="what-card">
-            <div className="icon pink"></div>
-            <h3>Cultural Performances</h3>
-            <p>
-              From classical Kathak and Sufi music to modern Bollywood-inspired indie pop, we bring
-              the best of Indian sound and movement to the stage.
-            </p>
+      {/* OUR STORY */}
+      <section className="ap-section ap-story">
+        <div className="ap-container">
+          <div className="ap-section-header">
+            <h2>{t("about.storyTitle")}</h2>
+            <p className="ap-subtitle">{t("about.storySubtitle")}</p>
           </div>
-
-          <div className="what-card">
-            <div className="icon yellow"></div>
-            <h3>Community Engagement</h3>
-            <p>
-              Interactive workshops, food festivals, and family zones ensure that every visitor feels
-              part of the vibrant tapestry of the festival.
-            </p>
-          </div>
-
-          <div className="what-card">
-            <div className="icon blue"></div>
-            <h3>Artist Showcases</h3>
-            <p>
-              We provide a curated platform for emerging talents and established masters, fostering a
-              marketplace of ideas and artistic commerce.
-            </p>
+          <div className="ap-timeline">
+            <div className="ap-timeline-item">
+              <div className="ap-timeline-dot">1</div>
+              <h4>2015 — The Spark</h4>
+              <p>Inaugural event with thousands of attendees.</p>
+            </div>
+            <div className="ap-timeline-item">
+              <div className="ap-timeline-dot">2</div>
+              <h4>2018 — Growth</h4>
+              <p>Expanded programming and artist line-up.</p>
+            </div>
+            <div className="ap-timeline-item">
+              <div className="ap-timeline-dot">3</div>
+              <h4>2021 — Digital Reach</h4>
+              <p>Reaching audiences beyond the capital.</p>
+            </div>
+            <div className="ap-timeline-item">
+              <div className="ap-timeline-dot">4</div>
+              <h4>Today — Ottawa&apos;s Festival</h4>
+              <p>A not-for-profit bringing Indian arts to everyone.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* TEAM SECTION */}
-      <section className="team-section">
-        <h2>Meet the Team</h2>
-        <p className="team-subtitle">
-          The passionate people driving the magic behind the festival.
-        </p>
-
-        <div className="team-grid">
-          <div className="team-card">
-            <h3>Arjun Mehta</h3>
-            <p className="role">FESTIVAL DIRECTOR</p>
-            <p className="bio">
-              A visionary arts administrator with 20 years of experience in managing international
-              cultural events and curating diversity.
-            </p>
+      {/* WHAT WE DO - with images */}
+      <section className="ap-section ap-what">
+        <div className="ap-container">
+          <div className="ap-section-header">
+            <h2>{t("about.whatTitle")}</h2>
+            <p className="ap-subtitle">{t("about.whatSubtitle")}</p>
           </div>
-
-          <div className="team-card">
-            <h3>Priya Sharma</h3>
-            <p className="role">HEAD OF PROGRAMMING</p>
-            <p className="bio">
-              Former curator at the National Centre for Performing Arts, Priya brings deep
-              connections to India’s traditional art world.
-            </p>
+          <div className="ap-what-grid">
+            <div className="ap-what-card">
+              <div className="ap-what-img">
+                <img src={IMG_CULTURAL} alt="Cultural performances" />
+              </div>
+              <div className="ap-what-body">
+                <h3>{t("about.performancesTitle")}</h3>
+                <p>
+                  {t("about.performancesText")}
+                </p>
+              </div>
+            </div>
+            <div className="ap-what-card">
+              <div className="ap-what-img">
+                <img src={IMG_COMMUNITY} alt="Community engagement" />
+              </div>
+              <div className="ap-what-body">
+                <h3>{t("about.communityEngagementTitle")}</h3>
+                <p>
+                  {t("about.communityEngagementText")}
+                </p>
+              </div>
+            </div>
+            <div className="ap-what-card">
+              <div className="ap-what-img">
+                <img src={IMG_ARTISTS} alt="Artist showcases" />
+              </div>
+              <div className="ap-what-body">
+                <h3>{t("about.artistShowcasesTitle")}</h3>
+                <p>
+                  {t("about.artistShowcasesText")}
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="team-card">
-            <h3>Rohan Gupta</h3>
-            <p className="role">CREATIVE LEAD</p>
-            <p className="bio">
-              Award-winning designer focusing on immersive spatial experiences blending tradition
-              with futuristic technology.
-            </p>
+      {/* MEET THE TEAM */}
+      <section className="ap-section ap-team">
+        <div className="ap-container">
+          <div className="ap-section-header">
+            <h2>{t("about.teamTitle")}</h2>
+            <p className="ap-subtitle">{t("about.teamSubtitle")}</p>
           </div>
-
-          <div className="team-card">
-            <h3>Ananya Iyer</h3>
-            <p className="role">COMMUNITY LIAISON</p>
-            <p className="bio">
-              Specializes in local outreach and sustainable tourism, ensuring the festival leaves a
-              positive footprint on its host cities.
-            </p>
+          <div className="ap-team-grid">
+            <div className="ap-team-card">
+              <h3>Arjun Mehta</h3>
+              <p className="ap-role">Festival Director</p>
+              <p className="ap-bio">Visionary arts administrator with experience in cultural events and curation.</p>
+            </div>
+            <div className="ap-team-card">
+              <h3>Priya Sharma</h3>
+              <p className="ap-role">Head of Programming</p>
+              <p className="ap-bio">Deep connections to India&apos;s traditional art world and contemporary programming.</p>
+            </div>
+            <div className="ap-team-card">
+              <h3>Rohan Gupta</h3>
+              <p className="ap-role">Creative Lead</p>
+              <p className="ap-bio">Immersive experiences blending tradition with modern design.</p>
+            </div>
+            <div className="ap-team-card">
+              <h3>Ananya Iyer</h3>
+              <p className="ap-role">Community Liaison</p>
+              <p className="ap-bio">Local outreach and ensuring the festival leaves a positive footprint.</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* GET INVOLVED */}
-      <section className="involved-section">
-        <h2>Get Involved</h2>
-        <p>The festival thrives on the energy of people like you. Join us in making history.</p>
-
-        <div className="involved-buttons">
-          <button>Volunteer</button>
-          <button>Become an Artist</button>
-          <button>Contact Us</button>
-        </div>
-
-        <div className="stats">
-          <div className="stat"><span>🌐</span> 50+ Nations</div>
-          <div className="stat"><span>📅</span> 12 Days of Joy</div>
-          <div className="stat"><span>🏅</span> Top Global Event</div>
+      <section className="ap-section ap-involved">
+        <div className="ap-container">
+          <div className="ap-section-header">
+            <h2>{t("about.getInvolvedTitle")}</h2>
+            <p className="ap-subtitle">{t("about.getInvolvedSubtitle")}</p>
+          </div>
+          <div className="ap-involved-buttons">
+            <Link to="/volunteer" className="ap-btn ap-btn-primary">{t("landing.volunteerCta")}</Link>
+            <Link to="/artist" className="ap-btn ap-btn-outline">{t("about.becomeArtist")}</Link>
+            <Link to="/events" className="ap-btn ap-btn-ghost">{t("about.viewEvents")}</Link>
+          </div>
+          <div className="ap-stats">
+            <div className="ap-stat"><span className="ap-stat-icon">🌐</span> 50+ Nations</div>
+            <div className="ap-stat"><span className="ap-stat-icon">📅</span> Years of Joy</div>
+            <div className="ap-stat"><span className="ap-stat-icon">🏅</span> Community Driven</div>
+          </div>
         </div>
       </section>
-
     </div>
   );
 };

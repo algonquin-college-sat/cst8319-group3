@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getUpcomingEvents } from "../Services/eventService";
 import EventCard from "../Component/EventCard";
 import "../Styles/LandingPage.css";
+import { useLanguage } from "../i18n/LanguageContext";
 
 // Indian culture / festival imagery (replace with client assets if preferred)
 const IMG_COMMUNITY =
@@ -15,6 +16,7 @@ const PLACEHOLDER_EVENT = "https://placehold.co/400x260/fef5ff/c41e5a?text=Event
 const PLACEHOLDER_GALLERY = "https://placehold.co/360x240/fff5f0/c41e5a?text=Festival+Moments";
 
 const LandingPage = () => {
+  const { t } = useLanguage();
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -39,13 +41,13 @@ const LandingPage = () => {
       <section className="lp-hero">
         <div className="lp-hero-overlay" />
         <div className="lp-hero-content lp-hero-centered">
-          <p className="lp-hero-kicker">Ottawa&apos;s Indian Cultural Festival</p>
-          <h1>Canada&apos;s Great India Festival</h1>
+          <p className="lp-hero-kicker">{t("landing.heroKicker")}</p>
+          <h1>{t("landing.heroTitle")}</h1>
           <p className="lp-hero-subtitle">
-            Connecting you to Indian arts, performances, food, and community events in the capital.
+            {t("landing.heroSubtitle")}
           </p>
           <Link to="/events" className="lp-btn lp-btn-primary">
-            See What&apos;s On
+            {t("landing.heroCta")}
           </Link>
         </div>
       </section>
@@ -55,13 +57,12 @@ const LandingPage = () => {
         <section className="lp-section lp-about-strip">
           <div className="lp-about-strip-inner">
             <div className="lp-about-strip-text">
-              <h2>The Great India Festival</h2>
+              <h2>{t("landing.aboutTitle")}</h2>
               <p>
-                A not-for-profit organization bringing Indian culture to Ottawa through festivals,
-                special events, and community programs. Inclusive, family-friendly, and open to all.
+                {t("landing.aboutText")}
               </p>
               <Link to="/about" className="lp-btn lp-btn-outline-dark">
-                Learn More
+                {t("landing.aboutCta")}
               </Link>
             </div>
             <div className="lp-about-strip-img">
@@ -73,10 +74,9 @@ const LandingPage = () => {
         {/* MISSION: Community & Access WITH IMAGE + This Month's Highlight (client image) */}
         <section className="lp-section lp-section-mission">
           <div className="lp-section-header lp-section-header-centered">
-            <h2>Our Mission</h2>
+            <h2>{t("landing.missionTitle")}</h2>
             <p>
-              To create an inclusive, professional festival platform where Indian arts and culture
-              connect with communities from every background.
+              {t("landing.missionText")}
             </p>
           </div>
 
@@ -86,15 +86,14 @@ const LandingPage = () => {
                 <img src={IMG_COMMUNITY} alt="Community and culture" />
               </div>
               <div className="lp-mission-card-body">
-                <h3>Community &amp; Access</h3>
+                <h3>{t("landing.communityTitle")}</h3>
                 <p>
-                  Free and paid events, family-friendly programming, and volunteer opportunities for
-                  people of all ages and cultures.
+                  {t("landing.communityText")}
                 </p>
               </div>
             </div>
             <div className="lp-mission-card lp-highlight-card">
-              <h3>This Month&apos;s Highlight</h3>
+              <h3>{t("landing.highlightTitle")}</h3>
               <div className="lp-highlight-img">
                 {/* Replace src with client image when provided */}
                 <img src={mainEvent?.bannerImageUrl || PLACEHOLDER_HIGHLIGHT} alt="Highlight event" />
@@ -111,10 +110,9 @@ const LandingPage = () => {
         {/* UPCOMING EVENTS - image per card (client images later) */}
         <section className="lp-section">
           <div className="lp-section-header lp-section-header-centered">
-            <h2>Upcoming Events</h2>
+            <h2>{t("landing.upcomingTitle")}</h2>
             <p>
-              Browse cultural performances, workshops, and community events. Register online and
-              receive email confirmations and reminders.
+              {t("landing.upcomingText")}
             </p>
           </div>
 
@@ -135,7 +133,7 @@ const LandingPage = () => {
           )}
           <div className="lp-section-cta">
             <Link to="/events" className="lp-link">
-              See All Events
+              {t("landing.seeAllEvents")}
             </Link>
           </div>
         </section>
@@ -143,10 +141,9 @@ const LandingPage = () => {
         {/* FESTIVAL MOMENTS - placeholder images (client will provide) */}
         <section className="lp-section lp-section-soft lp-section-gallery">
           <div className="lp-section-header lp-section-header-centered">
-            <h2>Festival Moments</h2>
+            <h2>{t("landing.momentsTitle")}</h2>
             <p>
-              Relive the energy of past years with a gallery of photos and videos from performances,
-              food, and community celebrations.
+              {t("landing.momentsText")}
             </p>
           </div>
           <div className="lp-gallery-teaser">
@@ -162,7 +159,7 @@ const LandingPage = () => {
           </div>
           <div className="lp-section-cta">
             <Link to="/gallery" className="lp-btn lp-btn-primary">
-              View Gallery
+              {t("landing.viewGallery")}
             </Link>
           </div>
         </section>
@@ -174,20 +171,19 @@ const LandingPage = () => {
               <img src={IMG_CELEBRATION} alt="Join the festival" />
             </div>
             <div className="lp-involved-content">
-              <h2>Get Involved</h2>
+              <h2>{t("landing.getInvolvedTitle")}</h2>
               <p>
-                The festival grows with every volunteer, artist, and supporter who joins. Choose how
-                you want to be part of TGIF.
+                {t("landing.getInvolvedText")}
               </p>
               <div className="lp-involved-buttons">
                 <Link to="/volunteer" className="lp-btn lp-btn-primary">
-                  Volunteer
+                  {t("landing.volunteerCta")}
                 </Link>
                 <Link to="/artist" className="lp-btn lp-btn-outline">
-                  Call for Artists
+                  {t("landing.artistsCta")}
                 </Link>
                 <Link to="/events" className="lp-btn lp-btn-ghost">
-                  Register for Events
+                  {t("landing.registerCta")}
                 </Link>
               </div>
             </div>
