@@ -7,3 +7,11 @@ export const getUpcomingEvents = async () => {
   }
   return await response.json();
 };
+
+export const getAllEvents = async () => {
+  const response = await fetch(`${API_BASE}/events`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch events");
+  }
+  return await response.json();
+};

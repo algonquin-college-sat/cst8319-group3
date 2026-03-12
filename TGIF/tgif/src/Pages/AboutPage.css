@@ -1,0 +1,168 @@
+.about-page {
+  font-family: "Inter", sans-serif;
+  color: #222;
+}
+
+/* HERO */
+.hero-section {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.hero-content p {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+/* MISSION */
+.mission-section {
+  padding: 60px 120px;
+  background: white;
+}
+
+.mission-text {
+  max-width: 800px;
+  margin-top: 10px;
+}
+
+.mission-cards {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.mission-card {
+  width: 50%;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.pink { background: #ff6fae; }
+.yellow { background: #ffd447; }
+.blue { background: #6ecbff; }
+
+/* STORY */
+.story-section {
+  padding: 60px 120px;
+}
+
+.story-subtitle {
+  margin-top: 10px;
+}
+
+.timeline {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.timeline-item .circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* WHAT WE DO */
+.what-section {
+  padding: 60px 120px;
+  background: #ffe7ef;
+}
+
+.what-cards {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.what-card {
+  width: 33%;
+}
+
+/* TEAM */
+.team-section {
+  padding: 60px 120px;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.role {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.bio {
+  margin-top: 10px;
+}
+
+/* GET INVOLVED */
+.involved-section {
+  padding: 60px 120px;
+}
+
+.involved-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.involved-buttons button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+.stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.stat {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
