@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../Context/useLanguage';
 import '../styles/pages.css';
 import '../styles/footer.css';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../Context/LanguageContext';
 import { createClient } from '@metagptx/web-sdk';
 import '../styles/pages.css';
 import '../styles/footer.css';

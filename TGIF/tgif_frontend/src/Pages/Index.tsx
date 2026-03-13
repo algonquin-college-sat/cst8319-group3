@@ -5,7 +5,7 @@ import HeroSection from '../components/HeroSection';
 import UpcomingEvents from '../components/UpcomingEvents';
 import EventCalendar from '../components/EventCalendar';
 import KeynoteSpeakers from '../components/KeynoteSpeakers';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../Context/LanguageContext';
 import '../styles/footer.css';
 
 const Footer: React.FC = () => {

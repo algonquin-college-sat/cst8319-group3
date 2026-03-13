@@ -1,34 +1,32 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
-import { createClient } from '@metagptx/web-sdk';
+import { useLanguage } from '../Context/LanguageContext';
+import axios from "axios";
 import '../styles/calendar.css';
-
-const client = createClient();
 
 interface EventData {
   id: number;
-  title_en: string;
-  title_fr: string;
-  description_en?: string;
-  description_fr?: string;
+  titleEn: string;      // Fixed to camelCase
+  titleFr: string;      // Fixed to camelCase
+  descriptionEn?: string;
+  descriptionFr?: string;
   date: string;
   time: string;
-  venue_en?: string;
-  venue_fr?: string;
-  event_type: string;
+  venueEn?: string;
+  venueFr?: string;
+  eventType: string;    // Fixed to camelCase
   price?: number | null;
   currency?: string;
-  registration_open?: boolean;
-  registration_opens_date?: string;
-  category_en?: string;
-  category_fr?: string;
-  image_url?: string;
+  registrationOpen?: boolean;
+  imageUrl?: string;    // Fixed to camelCase
+  [key: string]: any;
 }
 
 const EventCalendar: React.FC = () => {
   const { t, getField } = useLanguage();
   const navigate = useNavigate();
+  
+  // Note: Using March 2026 to match your sample data
   const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 1));
   const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
   const [events, setEvents] = useState<EventData[]>([]);
@@ -36,25 +34,19 @@ const EventCalendar: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await client.entities.events.query({ query: {}, limit: 100 });
-        if (res?.data?.items) {
-          setEvents(res.data.items);
-        }
+        const res = await axios.get("http://localhost:8080/api/event");
+        // Use the array directly based on your console log
+        const data = Array.isArray(res.data) ? res.data : res.data?.items || [];
+        setEvents(data);
       } catch (err) {
-        console.error('Failed to fetch events:', err);
+        console.error("Failed to fetch events:", err);
       }
     };
     fetchEvents();
   }, []);
 
-  const monthNames_en = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
-  const monthNames_fr = [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
-  ];
+  const monthNames_en = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthNames_fr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
   const dayNames_en = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const dayNames_fr = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
@@ -67,11 +59,13 @@ const EventCalendar: React.FC = () => {
   const eventDates = useMemo(() => {
     const dates: Record<string, EventData[]> = {};
     events.forEach((event) => {
-      const eventDate = new Date(event.date);
-      if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
-        const day = eventDate.getDate().toString();
-        if (!dates[day]) dates[day] = [];
-        dates[day].push(event);
+      // Split YYYY-MM-DD to avoid timezone shifts
+      const [eYear, eMonth, eDay] = event.date.split('-').map(Number);
+      
+      if (eYear === year && (eMonth - 1) === month) {
+        const dayKey = eDay.toString();
+        if (!dates[dayKey]) dates[dayKey] = [];
+        dates[dayKey].push(event);
       }
     });
     return dates;
@@ -108,7 +102,12 @@ const EventCalendar: React.FC = () => {
   for (let day = 1; day <= daysInMonth; day++) {
     const dayStr = day.toString();
     const hasEvent = !!eventDates[dayStr];
-    const isSelected = selectedEvent && new Date(selectedEvent.date).getDate() === day;
+    
+    // Check if the selected event matches this specific day
+    const isSelected = selectedEvent && 
+                       parseInt(selectedEvent.date.split('-')[2]) === day &&
+                       (parseInt(selectedEvent.date.split('-')[1]) - 1) === month;
+
     calendarDays.push(
       <div
         key={day}
@@ -126,9 +125,7 @@ const EventCalendar: React.FC = () => {
       <div className="section-container">
         <div className="section-header">
           <span className="section-tag">{t('Event Calendar', 'Calendrier des Événements')}</span>
-          <h2 className="section-title">
-            {t('Upcoming Celebrations', 'Célébrations à Venir')}
-          </h2>
+          <h2 className="section-title">{t('Upcoming Celebrations', 'Célébrations à Venir')}</h2>
           <p className="section-description">
             {t(
               'Browse our calendar to find events near you. Click on highlighted dates to see event details.',
@@ -156,13 +153,13 @@ const EventCalendar: React.FC = () => {
             {selectedEvent ? (
               <div className="event-detail-card">
                 <img
-                  src={selectedEvent.image_url}
+                  src={selectedEvent.imageUrl || selectedEvent.image_url}
                   alt={getField(selectedEvent, 'title')}
                   className="event-detail-image"
                 />
                 <div className="event-detail-content">
-                  <span className={`event-type-badge ${selectedEvent.event_type === 'paid' ? 'badge-paid' : 'badge-free'}`}>
-                    {selectedEvent.event_type === 'paid'
+                  <span className={`event-type-badge ${selectedEvent.eventType === 'paid' ? 'badge-paid' : 'badge-free'}`}>
+                    {selectedEvent.eventType === 'paid'
                       ? t('Paid Event', 'Événement Payant')
                       : t('Free Event', 'Événement Gratuit')}
                   </span>
@@ -171,7 +168,7 @@ const EventCalendar: React.FC = () => {
                   <div className="event-detail-meta">
                     <div className="meta-item">
                       <span className="meta-icon">📅</span>
-                      <span>{new Date(selectedEvent.date).toLocaleDateString()}</span>
+                      <span>{selectedEvent.date}</span>
                     </div>
                     <div className="meta-item">
                       <span className="meta-icon">⏰</span>
@@ -192,7 +189,7 @@ const EventCalendar: React.FC = () => {
                     className="event-register-btn"
                     onClick={() => handleRegisterClick(selectedEvent.id)}
                   >
-                    {selectedEvent.registration_open
+                    {selectedEvent.registrationOpen
                       ? t('Register Now', "S'inscrire Maintenant")
                       : t('Registration Opens Soon', 'Inscription Bientôt')}
                   </button>
