@@ -1,43 +1,8 @@
 // Mock data structured to match Spring Boot API response format
 // All text fields have _en and _fr variants for bilingual support
 
-export interface EventData {
-  id: number;
-  title_en: string;
-  title_fr: string;
-  description_en: string;
-  description_fr: string;
-  date: string; // ISO date string
-  time: string;
-  venue_en: string;
-  venue_fr: string;
-  event_type: 'paid' | 'unpaid';
-  price: number | null;
-  currency: string;
-  registration_open: boolean;
-  registration_opens_date: string;
-  category_en: string;
-  category_fr: string;
-  image_url: string;
-}
 
-export interface SpeakerData {
-  id: number;
-  name: string;
-  title_en: string;
-  title_fr: string;
-  bio_en: string;
-  bio_fr: string;
-  image_url: string;
-  event_id: number;
-  social_links: {
-    instagram?: string;
-    facebook?: string;
-    website?: string;
-  };
-}
-
-export const mockEvents: EventData[] = [
+export const mockEvents = [
   {
     id: 1,
     title_en: 'Diwali Grand Celebration',
@@ -154,7 +119,7 @@ export const mockEvents: EventData[] = [
   },
 ];
 
-export const mockSpeakers: SpeakerData[] = [
+export const mockSpeakers = [
   {
     id: 1,
     name: 'Priya Sharma',
