@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getUpcomingEvents } from "../Services/eventService";
 import EventCard from "../Component/EventCard";
 import LanguageToggle from "../Component/LanguageToggle";
-import "../Styles/LandingPage.css";
+import "../styles/LandingPage.css";
 
 const LandingPage = () => {
   const [events, setEvents] = useState([]);
