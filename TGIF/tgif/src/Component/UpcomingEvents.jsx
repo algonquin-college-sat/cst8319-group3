@@ -3,14 +3,7 @@ import { useLanguage } from '../Context/LanguageContext';
 import { mockEvents } from '../Data/mockData';
 import '../styles/events.css';
 
-interface CountdownTime {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
-
-const getCountdown = (targetDate: string): CountdownTime => {
+const getCountdown = (targetDate) => {
   const now = new Date().getTime();
   const target = new Date(targetDate).getTime();
   const diff = target - now;
@@ -25,9 +18,9 @@ const getCountdown = (targetDate: string): CountdownTime => {
   };
 };
 
-const UpcomingEvents: React.FC = () => {
+const UpcomingEvents = () => {
   const { t, getField } = useLanguage();
-  const [countdowns, setCountdowns] = useState<Record<number, CountdownTime>>({});
+  const [countdowns, setCountdowns] = useState({});
 
   const upcomingEvents = mockEvents
     .filter((e) => new Date(e.date).getTime() > new Date().getTime())
@@ -36,7 +29,7 @@ const UpcomingEvents: React.FC = () => {
 
   useEffect(() => {
     const updateCountdowns = () => {
-      const newCountdowns: Record<number, CountdownTime> = {};
+      const newCountdowns = {};
       upcomingEvents.forEach((event) => {
         newCountdowns[event.id] = getCountdown(event.date);
       });

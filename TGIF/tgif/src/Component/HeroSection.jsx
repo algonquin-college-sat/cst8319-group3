@@ -2,7 +2,7 @@ import React from 'react';
 import { useLanguage } from '../Context/LanguageContext';
 import '../styles/hero.css';
 
-const HeroSection: React.FC = () => {
+const HeroSection = () => {
   const { t } = useLanguage();
 
   return (

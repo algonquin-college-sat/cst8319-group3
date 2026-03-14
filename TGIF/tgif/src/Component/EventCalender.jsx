@@ -1,12 +1,13 @@
+// @ts-ignore
 import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../Context/LanguageContext';
-import { mockEvents, EventData } from '../Data/mockData';
-import '../styles/calendar.css';
+import { mockEvents } from '../Data/mockData';
+import '../styles/calender.css';
 
-const EventCalendar: React.FC = () => {
+const EventCalendar = () => {
   const { t, getField } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 1)); // March 2026
-  const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const monthNames_en = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -26,7 +27,7 @@ const EventCalendar: React.FC = () => {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
   const eventDates = useMemo(() => {
-    const dates: Record<string, EventData[]> = {};
+    const dates = {};
     mockEvents.forEach((event) => {
       const eventDate = new Date(event.date);
       if (eventDate.getFullYear() === year && eventDate.getMonth() === month) {
@@ -48,7 +49,7 @@ const EventCalendar: React.FC = () => {
     setSelectedEvent(null);
   };
 
-  const handleDayClick = (day: number) => {
+  const handleDayClick = (day) => {
     const dayStr = day.toString();
     if (eventDates[dayStr] && eventDates[dayStr].length > 0) {
       setSelectedEvent(eventDates[dayStr][0]);
@@ -122,7 +123,7 @@ const EventCalendar: React.FC = () => {
               <div className="event-detail-card">
                 <img
                   src={selectedEvent.image_url}
-                  alt={getField(selectedEvent as unknown as Record<string, unknown>, 'title')}
+                  alt={getField(selectedEvent, 'title')}
                   className="event-detail-image"
                 />
                 <div className="event-detail-content">
@@ -131,8 +132,8 @@ const EventCalendar: React.FC = () => {
                       ? t('Paid Event', 'Événement Payant')
                       : t('Free Event', 'Événement Gratuit')}
                   </span>
-                  <h3 className="event-detail-title">{getField(selectedEvent as unknown as Record<string, unknown>, 'title')}</h3>
-                  <p className="event-detail-desc">{getField(selectedEvent as unknown as Record<string, unknown>, 'description')}</p>
+                  <h3 className="event-detail-title">{getField(selectedEvent, 'title')}</h3>
+                  <p className="event-detail-desc">{getField(selectedEvent, 'description')}</p>
                   <div className="event-detail-meta">
                     <div className="meta-item">
                       <span className="meta-icon">📅</span>
@@ -144,7 +145,7 @@ const EventCalendar: React.FC = () => {
                     </div>
                     <div className="meta-item">
                       <span className="meta-icon">📍</span>
-                      <span>{getField(selectedEvent as unknown as Record<string, unknown>, 'venue')}</span>
+                      <span>{getField(selectedEvent, 'venue')}</span>
                     </div>
                     {selectedEvent.price && (
                       <div className="meta-item">

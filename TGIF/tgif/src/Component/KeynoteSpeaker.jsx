@@ -3,10 +3,10 @@ import { useLanguage } from '../Context/LanguageContext';
 import { mockSpeakers, mockEvents } from '../Data/mockData';
 import '../styles/speakers.css';
 
-const KeynoteSpeakers: React.FC = () => {
+const KeynoteSpeakers = () => {
   const { t, getField } = useLanguage();
 
-  const getEventForSpeaker = (eventId: number) => {
+  const getEventForSpeaker = (eventId) => {
     return mockEvents.find((e) => e.id === eventId);
   };
 

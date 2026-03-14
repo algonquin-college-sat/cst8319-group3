@@ -1,22 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../Context/LanguageContext';
 import '../styles/header.css';
 
-interface NavLink {
-  href: string;
-  label_en: string;
-  label_fr: string;
-  isRoute: boolean;
-}
-
-const Header: React.FC = () => {
+const Header = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
-  const navLinks: NavLink[] = isHomePage
+  const navLinks = isHomePage
     ? [
         { href: '#home', label_en: 'Home', label_fr: 'Accueil', isRoute: false },
         { href: '#events', label_en: 'Events', label_fr: 'Événements', isRoute: false },
