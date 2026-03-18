@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../Context/LanguageContext';
 import '../styles/pages.css';
 import '../styles/footer.css';
 
@@ -121,7 +121,7 @@ const Sponsors: React.FC = () => {
         <div className="footer-container">
           <div className="footer-bottom">
             <p>
-              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')}
+              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')}
             </p>
           </div>
         </div>

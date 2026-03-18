@@ -42,7 +42,7 @@ const Header: React.FC = () => {
           <span className="logo-icon">🪔</span>
           <div className="logo-text">
             <span className="logo-title">TGIF</span>
-            <span className="logo-subtitle">{t('The Great India Festival', 'Le Grand Festival Indien')}</span>
+            <span className="logo-subtitle">{t('The Great India Festival', 'Le Grand Festival de l\'Inde')}</span>
           </div>
         </Link>
 

@@ -22,7 +22,7 @@ const HeroSection: React.FC = () => {
         <h1 className="hero-title">
           {t('The Great India', 'Le Grand')}
           <br />
-          <span className="hero-title-accent">{t('Festival', 'Festival Indien')}</span>
+          <span className="hero-title-accent">{t('Festival', 'Festival de l\'Inde')}</span>
         </h1>
         <p className="hero-description">
           {t(

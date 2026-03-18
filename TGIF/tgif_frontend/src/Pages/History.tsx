@@ -81,7 +81,7 @@ const History: React.FC = () => {
           <p>
             {t(
               'From a small gathering to a national celebration — the journey of The Great India Festival.',
-              'D\'un petit rassemblement à une célébration nationale — le parcours du Grand Festival Indien.'
+              'D\'un petit rassemblement à une célébration nationale — le parcours du Grand Festival de l\'Inde.'
             )}
           </p>
         </div>
@@ -121,7 +121,7 @@ const History: React.FC = () => {
         <div className="footer-container">
           <div className="footer-bottom">
             <p>
-              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')}
+              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')}
             </p>
           </div>
         </div>

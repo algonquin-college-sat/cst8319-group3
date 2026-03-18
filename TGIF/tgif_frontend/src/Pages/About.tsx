@@ -120,7 +120,7 @@ const About: React.FC = () => {
             <p>
               {t(
                 'The passionate people behind The Great India Festival.',
-                'Les personnes passionnées derrière Le Grand Festival Indien.'
+                'Les personnes passionnées derrière Le Grand Festival de l\'Inde.'
               )}
             </p>
           </div>
@@ -161,7 +161,7 @@ const About: React.FC = () => {
         <div className="footer-container">
           <div className="footer-bottom">
             <p>
-              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')}
+              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')}
             </p>
           </div>
         </div>
