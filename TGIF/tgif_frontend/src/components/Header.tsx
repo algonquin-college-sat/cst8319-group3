@@ -16,17 +16,8 @@ const Header: React.FC = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
-  const navLinks: NavLink[] = isHomePage
-    ? [
+  const navLinks: NavLink[] = [
         { href: '#home', label_en: 'Home', label_fr: 'Accueil', isRoute: false },
-        { href: '#events', label_en: 'Events', label_fr: 'Événements', isRoute: false },
-        { href: '#speakers', label_en: 'Speakers', label_fr: 'Conférenciers', isRoute: false },
-        { href: '#calendar', label_en: 'Calendar', label_fr: 'Calendrier', isRoute: false },
-        { href: '/about', label_en: 'About', label_fr: 'À Propos', isRoute: true },
-        { href: '/registration', label_en: 'Register', label_fr: 'Inscription', isRoute: true },
-      ]
-    : [
-        { href: '/', label_en: 'Home', label_fr: 'Accueil', isRoute: true },
         { href: '/about', label_en: 'About', label_fr: 'À Propos', isRoute: true },
         { href: '/registration', label_en: 'Register', label_fr: 'Inscription', isRoute: true },
         { href: '/history', label_en: 'History', label_fr: 'Histoire', isRoute: true },

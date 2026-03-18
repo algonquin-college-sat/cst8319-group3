@@ -34,8 +34,13 @@ const HeroSection: React.FC = () => {
           <a href="#events" className="hero-btn hero-btn-primary">
             {t('Explore Events', 'Explorer les Événements')}
           </a>
+        </div>
+        <div className="hero-buttons">
           <a href="#calendar" className="hero-btn hero-btn-secondary">
             {t('View Calendar', 'Voir le Calendrier')}
+          </a>
+          <a href="#speakers" className="hero-btn hero-btn-secondary">
+            {t('See Speakers', 'Voir les Intervenants')}
           </a>
         </div>
         <div className="hero-stats">
