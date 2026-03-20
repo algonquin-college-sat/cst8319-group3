@@ -23,7 +23,7 @@ public class EventService {
         return eventRepository.findAll().stream().skip(skip).limit(limit).toList();
     }
 
-    public Optional<Event> getById(Integer id) {
+    public Optional<Event> getById(Long id) {
         return eventRepository.findById(id);
     }
 
@@ -35,7 +35,7 @@ public class EventService {
     }
 
     @Transactional
-    public Optional<Event> update(Integer id, EventData data) {
+    public Optional<Event> update(Long id, EventData data) {
         return eventRepository.findById(id).map(event -> {
             // Partial Update Logic: Only update if field in DTO is not null
             if (data.getTitleEn() != null) event.setTitleEn(data.getTitleEn());
@@ -60,7 +60,7 @@ public class EventService {
     }
 
     @Transactional
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         if (eventRepository.existsById(id)) {
             eventRepository.deleteById(id);
             return true;

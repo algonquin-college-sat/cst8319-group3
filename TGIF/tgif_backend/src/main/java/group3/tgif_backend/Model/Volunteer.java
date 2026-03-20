@@ -1,24 +1,23 @@
 package group3.tgif_backend.Model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "volunteers")
+@Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Volunteer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id; //
+    private Long id; //
 
     @Column(name = "user_id", nullable = false)
     private String userId; //
-
-    @Column(name = "event_id", nullable = false)
-    private Integer eventId; //
 
     @Column(name = "name", nullable = false)
     private String name; //
@@ -34,4 +33,9 @@ public class Volunteer {
 
     @Column(name = "created_at")
     private java.time.ZonedDateTime createdAt; //
+
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

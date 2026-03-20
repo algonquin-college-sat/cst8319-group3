@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLanguage } from '../context/LanguageContext';
-import { createClient } from '@metagptx/web-sdk';
+import { useLanguage } from '../Context/LanguageContext';
+import axios from 'axios';
 import '../styles/admin.css';
 import '../styles/pages.css';
+import authFetch from '../Utils/auth';
+import UsersPage from "./User";
 
-const client = createClient();
 
-type Tab = 'dashboard' | 'events' | 'registrations' | 'volunteers';
+type Tab = 'dashboard' | 'events' | 'registrations' | 'volunteers' | 'users';
 
 interface EventItem {
   id: number;
@@ -26,6 +27,7 @@ interface EventItem {
   category_en?: string;
   category_fr?: string;
   image_url?: string;
+  [key: string]: any;
 }
 
 interface RegistrationItem {
@@ -53,10 +55,10 @@ interface VolunteerItem {
 }
 
 interface DashboardStats {
-  total_events: number;
-  total_registrations: number;
-  total_volunteers: number;
-  upcoming_events: number;
+  totalEvents: number;
+  totalRegistrations: number;
+  totalVolunteers: number;
+  upcomingEvents: number;
 }
 
 const Admin: React.FC = () => {
@@ -85,82 +87,106 @@ const Admin: React.FC = () => {
 
   // Auth check
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await client.auth.me();
-        if (res?.data) {
-          setUser(res.data);
-        }
-      } catch {
-        // Not logged in
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, []);
+  const checkAuth = async () => {
 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await authFetch("http://localhost:8080/api/users/profile");
+
+      if (!res) throw new Error();
+
+      const user = await res.data;
+      setUser(user);
+
+    } catch {
+      localStorage.removeItem("token");
+    }
+
+    setLoading(false);
+  };
+
+  checkAuth();
+}, []);
   const handleLogin = async () => {
-    await client.auth.toLogin();
+      window.location.href = "/login";
   };
 
   const handleLogout = async () => {
-    await client.auth.logout();
+    localStorage.removeItem("token");
     setUser(null);
+    window.location.href = "/login";
   };
 
   // Fetch data based on active tab
-  const fetchDashboard = useCallback(async () => {
-    try {
-      const res = await client.apiCall.invoke({
-        url: '/api/v1/admin/dashboard',
-        method: 'GET',
-        data: {},
-      });
-      if (res?.data) setStats(res.data);
-    } catch (err: any) {
-      console.error('Failed to fetch dashboard:', err);
-    }
-  }, []);
+const fetchDashboard = useCallback(async () => {
+  try {
+    const res = await authFetch("http://localhost:8080/api/dashboard");
+    console.log("Dashboard stats response:", res);
 
-  const fetchEvents = useCallback(async () => {
-    try {
-      const res = await client.entities.events.query({ query: {}, limit: 100 });
-      if (res?.data?.items) setEvents(res.data.items);
-    } catch (err: any) {
-      console.error('Failed to fetch events:', err);
-    }
-  }, []);
+    setStats(res.data); // ✅ Axios uses res.data
 
+  } catch (err) {
+    console.error("Failed to fetch dashboard", err);
+  }
+}, []);
+
+ const fetchEvents = useCallback(async () => {
+  try {
+
+    const res = await authFetch("http://localhost:8080/api/event");
+
+    setEvents(Array.isArray(res.data) ? res.data : []);
+    setStats((prev) => prev ? { ...prev, upcoming_events: res.data.filter((ev: EventItem) => new Date(ev.date).getTime() > new Date().getTime()).length } : prev);  
+  } catch (err) {
+    console.error("Failed to fetch events", err);
+    setEvents([]); // fallback
+  }
+}, []);
+ 
   const fetchRegistrations = useCallback(async () => {
-    try {
-      const params: any = {};
-      if (filterEventId) params.event_id = filterEventId;
-      const res = await client.apiCall.invoke({
-        url: '/api/v1/admin/reports/registrations',
-        method: 'GET',
-        data: params,
-      });
-      if (res?.data) setRegistrations(Array.isArray(res.data) ? res.data : []);
-    } catch (err: any) {
-      console.error('Failed to fetch registrations:', err);
-    }
-  }, [filterEventId]);
+  try {
 
-  const fetchVolunteers = useCallback(async () => {
-    try {
-      const params: any = {};
-      if (filterEventId) params.event_id = filterEventId;
-      const res = await client.apiCall.invoke({
-        url: '/api/v1/admin/reports/volunteers',
-        method: 'GET',
-        data: params,
-      });
-      if (res?.data) setVolunteers(Array.isArray(res.data) ? res.data : []);
-    } catch (err: any) {
-      console.error('Failed to fetch volunteers:', err);
-    }
-  }, [filterEventId]);
+    const params: any = {};
+    if (filterEventId) params.event_id = filterEventId;
+
+    const res = await authFetch("http://localhost:8080/api/admin/registrations", {
+      method: "GET",
+      params
+    });
+
+    setRegistrations(Array.isArray(res.data) ? res.data : []);
+
+  } catch (err) {
+    console.error('Failed to fetch registrations:', err);
+    setRegistrations([]); // fallback
+  }
+}, [filterEventId]);
+
+
+const fetchVolunteers = useCallback(async () => {
+  try {
+
+    const params: any = {};
+    if (filterEventId) params.event_id = filterEventId;
+
+    const res = await authFetch("http://localhost:8080/api/admin/volunteers", {
+      method: "GET",
+      params
+    });
+
+    setVolunteers(Array.isArray(res.data) ? res.data : []);
+
+  } catch (err) {
+    console.error('Failed to fetch volunteers:', err);
+    setVolunteers([]); // fallback
+  }
+}, [filterEventId]);
 
   useEffect(() => {
     if (!user || user.role !== 'admin') return;
@@ -178,30 +204,43 @@ const Admin: React.FC = () => {
     }
   }, [user, activeTab, fetchDashboard, fetchEvents, fetchRegistrations, fetchVolunteers]);
 
-  const handleAddEvent = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const data: any = { ...eventForm };
-      if (data.price) data.price = parseFloat(data.price);
-      else data.price = null;
-      await client.entities.events.create({ data });
-      setShowAddEvent(false);
-      setEventForm({
-        title_en: '', title_fr: '', description_en: '', description_fr: '',
-        date: '', time: '', venue_en: '', venue_fr: '',
-        event_type: 'paid', price: '', currency: 'CAD',
-        registration_open: true, registration_opens_date: '',
-        category_en: '', category_fr: '', image_url: '',
-      });
-      fetchEvents();
-      if (activeTab === 'dashboard') fetchDashboard();
-    } catch (err: any) {
-      alert('Failed to create event: ' + (err?.message || 'Unknown error'));
-    } finally {
-      setSubmitting(false);
-    }
-  };
+ const handleAddEvent = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setSubmitting(true);
+
+  try {
+    const data: any = { ...eventForm };
+
+    if (data.price) data.price = parseFloat(data.price);
+    else data.price = null;
+
+    await authFetch("http://localhost:8080/api/events", {
+      method: "POST",
+      data
+    });
+
+    // ✅ Reset UI
+    setShowAddEvent(false);
+
+    setEventForm({
+      title_en: '', title_fr: '', description_en: '', description_fr: '',
+      date: '', time: '', venue_en: '', venue_fr: '',
+      event_type: 'paid', price: '', currency: 'CAD',
+      registration_open: true, registration_opens_date: '',
+      category_en: '', category_fr: '', image_url: '',
+    });
+
+    // ✅ Refresh data
+    fetchEvents();
+    if (activeTab === 'dashboard') fetchDashboard();
+
+  } catch (err: any) {
+    console.error("Create event failed:", err);
+    alert("Failed to create event");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   // Loading state
   if (loading) {
@@ -252,6 +291,7 @@ const Admin: React.FC = () => {
     { key: 'events', icon: '🎉', label_en: 'Events', label_fr: 'Événements' },
     { key: 'registrations', icon: '📋', label_en: 'Registrations', label_fr: 'Inscriptions' },
     { key: 'volunteers', icon: '🤝', label_en: 'Volunteers', label_fr: 'Bénévoles' },
+    { key: 'users', icon: '👥', label_en: 'Users', label_fr: 'Utilisateurs' },
   ];
 
   return (
@@ -294,22 +334,22 @@ const Admin: React.FC = () => {
               <div className="dashboard-stats-grid">
                 <div className="dashboard-stat-card">
                   <div className="stat-icon">🎉</div>
-                  <div className="stat-value">{stats?.total_events ?? '—'}</div>
+                  <div className="stat-value">{stats?.totalEvents ?? '—'}</div>
                   <div className="stat-label">{t('Total Events', 'Total Événements')}</div>
                 </div>
                 <div className="dashboard-stat-card">
                   <div className="stat-icon">📅</div>
-                  <div className="stat-value">{stats?.upcoming_events ?? '—'}</div>
+                  <div className="stat-value">{stats?.upcomingEvents ?? '—'}</div>
                   <div className="stat-label">{t('Upcoming Events', 'Événements à Venir')}</div>
                 </div>
                 <div className="dashboard-stat-card">
                   <div className="stat-icon">📋</div>
-                  <div className="stat-value">{stats?.total_registrations ?? '—'}</div>
+                  <div className="stat-value">{stats?.totalRegistrations ?? '—'}</div>
                   <div className="stat-label">{t('Registrations', 'Inscriptions')}</div>
                 </div>
                 <div className="dashboard-stat-card">
                   <div className="stat-icon">🤝</div>
-                  <div className="stat-value">{stats?.total_volunteers ?? '—'}</div>
+                  <div className="stat-value">{stats?.totalVolunteers ?? '—'}</div>
                   <div className="stat-label">{t('Volunteers', 'Bénévoles')}</div>
                 </div>
               </div>
@@ -335,13 +375,13 @@ const Admin: React.FC = () => {
                       {events.slice(0, 5).map((ev) => (
                         <tr key={ev.id}>
                           <td>{ev.id}</td>
-                          <td>{getField(ev, 'title')}</td>
+                          <td>{t(ev.titleEn, ev.titleFr)}</td>
                           <td>{ev.date}</td>
-                          <td>{ev.event_type}</td>
+                          <td>{ev.eventType}</td>
                           <td>{ev.price ? `$${ev.price} ${ev.currency}` : t('Free', 'Gratuit')}</td>
                           <td>
-                            <span className={`status-badge ${ev.registration_open ? 'paid' : 'pending'}`}>
-                              {ev.registration_open ? t('Open', 'Ouvert') : t('Closed', 'Fermé')}
+                            <span className={`status-badge ${ev.registrationOpen ? 'paid' : 'pending'}`}>
+                              {ev.registrationOpen ? t('Open', 'Ouvert') : t('Closed', 'Fermé')}
                             </span>
                           </td>
                         </tr>
@@ -488,14 +528,14 @@ const Admin: React.FC = () => {
                       {events.map((ev) => (
                         <tr key={ev.id}>
                           <td>{ev.id}</td>
-                          <td>{getField(ev, 'title')}</td>
+                          <td>{t(ev.titleEn, ev.titleFr)}</td>
                           <td>{ev.date}</td>
-                          <td>{getField(ev, 'venue')}</td>
-                          <td>{ev.event_type}</td>
+                          <td>{t(ev.venueEn, ev.venueFr)}</td>
+                          <td>{ev.eventType}</td>
                           <td>{ev.price ? `$${ev.price}` : t('Free', 'Gratuit')}</td>
                           <td>
-                            <span className={`status-badge ${ev.registration_open ? 'paid' : 'pending'}`}>
-                              {ev.registration_open ? t('Open', 'Ouvert') : t('Closed', 'Fermé')}
+                            <span className={`status-badge ${ev.registrationOpen ? 'paid' : 'pending'}`}>
+                              {ev.registrationOpen? t('Open', 'Ouvert') : t('Closed', 'Fermé')}
                             </span>
                           </td>
                         </tr>
@@ -631,6 +671,8 @@ const Admin: React.FC = () => {
               </div>
             </>
           )}
+
+          {activeTab === 'users' && <UsersPage />}
         </main>
       </div>
     </div>

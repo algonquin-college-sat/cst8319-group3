@@ -176,7 +176,7 @@ const EventCalendar: React.FC = () => {
                     </div>
                     <div className="meta-item">
                       <span className="meta-icon">📍</span>
-                      <span>{getField(selectedEvent, 'venue')}</span>
+                      <span>{t(selectedEvent.venueEn, selectedEvent.venueFr)}</span>
                     </div>
                     {selectedEvent.price && (
                       <div className="meta-item">

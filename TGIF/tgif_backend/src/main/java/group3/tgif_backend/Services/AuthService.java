@@ -22,14 +22,12 @@ public class AuthService {
 
         return userRepository.findById(platformSub)
                 .map(user -> {
-                    // Update existing user
                     user.setEmail(email);
                     user.setName(name);
                     user.setLastLogin(ZonedDateTime.now());
                     return userRepository.save(user);
                 })
                 .orElseGet(() -> {
-                    // Create new user
                     User newUser = new User();
                     newUser.setId(platformSub);
                     newUser.setEmail(email);

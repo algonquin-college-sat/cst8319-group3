@@ -57,4 +57,4 @@ const Countdown: React.FC<Props> = React.memo(({ targetDate }) => {
   )
 })
 
-export default Countdown
+export default Countdown;

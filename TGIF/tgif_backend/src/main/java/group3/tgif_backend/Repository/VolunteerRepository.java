@@ -5,6 +5,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VolunteerRepository extends JpaRepository<Volunteer, Integer> {
-    List<Volunteer> findByEventId(Integer eventId);
+public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
+    List<Volunteer> findByUserId(String userId);
+
+    List<Volunteer> findByEventId(Long eventId);
+
+    boolean existsByEmailAndEventId(String email, Long eventId);
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { useLanguage } from '../Context/useLanguage';
+import { useLanguage } from '../Context/LanguageContext';
 import '../styles/pages.css';
 import '../styles/footer.css';
 
@@ -57,7 +57,8 @@ const Sponsors: React.FC = () => {
   );
 
   return (
-    <div>
+    <>
+   <div>
       <Header />
 
       {/* Hero */}
@@ -127,6 +128,7 @@ const Sponsors: React.FC = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 

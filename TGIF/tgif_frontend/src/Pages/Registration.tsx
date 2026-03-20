@@ -2,30 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { useLanguage } from '../Context/LanguageContext';
-import { createClient } from '@metagptx/web-sdk';
 import '../styles/pages.css';
 import '../styles/footer.css';
+import axios from 'axios';
 
-const client = createClient();
+
 
 interface EventData {
-  id: number;
-  title_en: string;
-  title_fr: string;
-  description_en?: string;
-  description_fr?: string;
-  date: string;
-  time: string;
-  venue_en?: string;
-  venue_fr?: string;
-  event_type: string;
-  price?: number | null;
-  currency?: string;
-  registration_open?: boolean;
-  registration_opens_date?: string;
-  category_en?: string;
-  category_fr?: string;
-  image_url?: string;
+  id: number
+  titleEn: string
+  titleFr: string
+  descriptionEn?: string
+  descriptionFr?: string
+  date: string // Format: YYYY-MM-DD
+  time: string
+  venueEn?: string
+  venueFr?: string
+  eventType: string
+  price?: number | null
+  currency?: string
+  categoryEn?: string
+  categoryFr?: string
+  imageUrl?: string
+  [key: string]: any
 }
 
 const Registration: React.FC = () => {
@@ -36,8 +35,8 @@ const Registration: React.FC = () => {
   const [events, setEvents] = useState<EventData[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -48,12 +47,12 @@ const Registration: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await client.entities.events.query({ query: {}, limit: 100 });
-        if (res?.data?.items) {
-          setEvents(res.data.items);
-        }
+        const res = await axios.get("http://localhost:8080/api/event");
+        // Use the array directly based on your console log
+        const data = Array.isArray(res.data) ? res.data : res.data?.items || [];
+        setEvents(data);
       } catch (err) {
-        console.error('Failed to fetch events:', err);
+        console.error("Failed to fetch events:", err);
       }
     };
     fetchEvents();
@@ -114,7 +113,7 @@ const Registration: React.FC = () => {
   };
 
   const selectedEvent = events.find((e) => e.id === selectedEventId);
-  const isPaidEvent = selectedEvent?.event_type === 'paid';
+  const isPaidEvent = selectedEvent?.eventType === 'paid';
   const canRegister = selectedEvent ? isRegistrationOpen(selectedEvent.date) : false;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,30 +125,18 @@ const Registration: React.FC = () => {
     if (!selectedEventId) return;
 
     setSubmitting(true);
-    try {
-      // Check if user is logged in
-      let isLoggedIn = false;
-      try {
-        const userRes = await client.auth.me();
-        if (userRes?.data) isLoggedIn = true;
-      } catch {
         // Not logged in - proceed anyway, backend will handle
+   const data = {
+        event_id: selectedEventId,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        payment_status: isPaidEvent ? 'pending' : 'free',
+        created_at: new Date().toISOString(),
       }
-
-      if (isLoggedIn) {
-        // Save registration to database
-        await client.entities.registrations.create({
-          data: {
-            event_id: selectedEventId,
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            email: formData.email,
-            payment_status: isPaidEvent ? 'pending' : 'free',
-            created_at: new Date().toISOString(),
-          },
-        });
-      }
-
+    try
+    {
+      await axios.post("http://localhost:8080/api/registration", data);
       setSubmitted(true);
     } catch (err: any) {
       console.error('Registration error:', err);
@@ -164,7 +151,7 @@ const Registration: React.FC = () => {
     if (!selectedEvent || !selectedEvent.price) return '#';
     const amount = selectedEvent.price;
     const description = encodeURIComponent(
-      language === 'en' ? selectedEvent.title_en : selectedEvent.title_fr
+      language === 'en' ? selectedEvent.titleEn : selectedEvent.titleFr
     );
     return `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=payments@tgif.ca&item_name=${description}&amount=${amount}&currency_code=${selectedEvent.currency}`;
   };
@@ -172,7 +159,7 @@ const Registration: React.FC = () => {
   const resetForm = () => {
     setSubmitted(false);
     setSelectedEventId(null);
-    setFormData({ firstName: '', lastName: '', email: '' });
+    setFormData({ first_name: '', last_name: '', email: '' });
   };
 
   return (
@@ -212,8 +199,8 @@ const Registration: React.FC = () => {
                     {t('Almost There!', 'Presque Terminé!')}
                   </h2>
                   <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '16px', color: '#6B7280', marginBottom: '8px', lineHeight: 1.6 }}>
-                    {t(`Thank you, ${formData.firstName}! Your registration for`, `Merci, ${formData.firstName}! Votre inscription pour`)}{' '}
-                    <strong>{language === 'en' ? selectedEvent?.title_en : selectedEvent?.title_fr}</strong>{' '}
+                    {t(`Thank you, ${formData.first_name}! Your registration for`, `Merci, ${formData.first_name}! Votre inscription pour`)}{' '}
+                    <strong>{language === 'en' ? selectedEvent?.titleEn : selectedEvent?.titleFr}</strong>{' '}
                     {t('has been received.', 'a été reçue.')}
                   </p>
                   <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '16px', color: '#6B7280', marginBottom: '24px', lineHeight: 1.6 }}>
@@ -223,11 +210,11 @@ const Registration: React.FC = () => {
                   <div style={{ background: 'linear-gradient(135deg, rgba(255, 107, 0, 0.05), rgba(255, 215, 0, 0.05))', borderRadius: '16px', padding: '24px', marginBottom: '24px', border: '1px solid rgba(255, 107, 0, 0.15)', textAlign: 'left' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#6B7280', marginBottom: '8px' }}>
                       <span>{t('Event', 'Événement')}</span>
-                      <span>{language === 'en' ? selectedEvent?.title_en : selectedEvent?.title_fr}</span>
+                      <span>{language === 'en' ? selectedEvent?.titleEn : selectedEvent?.titleFr}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#6B7280', marginBottom: '8px' }}>
                       <span>{t('Registrant', 'Inscrit')}</span>
-                      <span>{formData.firstName} {formData.lastName}</span>
+                      <span>{formData.first_name} {formData.last_name}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#6B7280', paddingBottom: '12px', borderBottom: '1px solid rgba(0,0,0,0.08)', marginBottom: '12px' }}>
                       <span>{t('Email', 'Courriel')}</span>
@@ -258,15 +245,15 @@ const Registration: React.FC = () => {
                     {t('Registration Successful!', 'Inscription Réussie!')}
                   </h2>
                   <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '16px', color: '#6B7280', marginBottom: '24px', lineHeight: 1.6 }}>
-                    {t(`Thank you, ${formData.firstName}! You have been registered for`, `Merci, ${formData.firstName}! Vous êtes inscrit(e) pour`)}{' '}
-                    <strong>{language === 'en' ? selectedEvent?.title_en : selectedEvent?.title_fr}</strong>.{' '}
+                    {t(`Thank you, ${formData.first_name}! You have been registered for`, `Merci, ${formData.first_name}! Vous êtes inscrit(e) pour`)}{' '}
+                    <strong>{language === 'en' ? selectedEvent?.titleEn : selectedEvent?.titleFr}</strong>.{' '}
                     {t(`A confirmation email has been sent to ${formData.email}.`, `Un courriel de confirmation a été envoyé à ${formData.email}.`)}
                   </p>
 
                   <div style={{ background: 'linear-gradient(135deg, rgba(19, 136, 8, 0.05), rgba(255, 215, 0, 0.05))', borderRadius: '16px', padding: '24px', marginBottom: '24px', border: '1px solid rgba(19, 136, 8, 0.15)', textAlign: 'left' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#6B7280', marginBottom: '8px' }}>
                       <span>{t('Event', 'Événement')}</span>
-                      <span>{language === 'en' ? selectedEvent?.title_en : selectedEvent?.title_fr}</span>
+                      <span>{language === 'en' ? selectedEvent?.titleEn : selectedEvent?.titleFr}</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#6B7280', marginBottom: '8px' }}>
                       <span>{t('Date', 'Date')}</span>
@@ -313,13 +300,13 @@ const Registration: React.FC = () => {
                             onClick={() => setSelectedEventId(event.id)}
                             style={!regOpen ? { opacity: 0.65, cursor: 'default' } : undefined}
                           >
-                            <img src={event.image_url} alt={language === 'en' ? event.title_en : event.title_fr} className="event-thumb" />
+                            <img src={event.imageUrl} alt={language === 'en' ? event.titleEn : event.titleFr} className="event-thumb" />
                             <div className="event-info">
-                              <h4>{language === 'en' ? event.title_en : event.title_fr}</h4>
+                              <h4>{language === 'en' ? event.titleEn : event.titleFr}</h4>
                               <div className="event-meta">📅 {new Date(event.date).toLocaleDateString(language === 'en' ? 'en-CA' : 'fr-CA', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                              <div className="event-meta">📍 {language === 'en' ? event.venue_en : event.venue_fr}</div>
+                              <div className="event-meta">📍 {language === 'en' ? event.venueEn : event.venueFr}</div>
                               <div className="event-price">
-                                {event.event_type === 'paid' ? `$${event.price} ${event.currency}` : t('Free', 'Gratuit')}
+                                {event.eventType === 'paid' ? `$${event.price} ${event.currency}` : t('Free', 'Gratuit')}
                                 {regOpen && (
                                   <span style={{ marginLeft: '8px', fontSize: '12px', color: '#138808', fontWeight: 600 }}>
                                     ✅ {t('Registration Open', 'Inscription Ouverte')}
@@ -351,7 +338,7 @@ const Registration: React.FC = () => {
               <div className="registration-form">
                 <h3>
                   {selectedEvent
-                    ? t('Register for ', "S'inscrire pour ") + (language === 'en' ? selectedEvent.title_en : selectedEvent.title_fr)
+                    ? t('Register for ', "S'inscrire pour ") + (language === 'en' ? selectedEvent.titleEn : selectedEvent.titleFr)
                     : t('Registration Form', "Formulaire d'Inscription")}
                 </h3>
 
@@ -426,14 +413,14 @@ const Registration: React.FC = () => {
                 ) : (
                   <form onSubmit={handleSubmit}>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', background: '#F9FAFB', borderRadius: '10px', marginBottom: '24px' }}>
-                      <img src={selectedEvent?.image_url} alt="" style={{ width: '56px', height: '56px', borderRadius: '8px', objectFit: 'cover' }} />
+                      <img src={selectedEvent?.imageUrl || selectedEvent?.imageUrl} alt="" style={{ width: '56px', height: '56px', borderRadius: '8px', objectFit: 'cover' }} />
                       <div>
                         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '14px', fontWeight: 600, color: '#1A1A2E' }}>
-                          {language === 'en' ? selectedEvent?.title_en : selectedEvent?.title_fr}
+                          {language === 'en' ? selectedEvent?.titleEn : selectedEvent?.titleFr}
                         </div>
                         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px', color: '#6B7280' }}>
                           {selectedEvent && new Date(selectedEvent.date).toLocaleDateString(language === 'en' ? 'en-CA' : 'fr-CA', { year: 'numeric', month: 'long', day: 'numeric' })} •{' '}
-                          {selectedEvent?.event_type === 'paid' ? (
+                          {selectedEvent?.eventType === 'paid' ? (
                             <span style={{ color: '#FF6B00', fontWeight: 600 }}>${selectedEvent.price} {selectedEvent.currency}</span>
                           ) : (
                             <span style={{ color: '#138808', fontWeight: 600 }}>{t('FREE', 'GRATUIT')}</span>
@@ -445,11 +432,11 @@ const Registration: React.FC = () => {
                     <div className="form-row">
                       <div className="form-group">
                         <label>{t('First Name', 'Prénom')} *</label>
-                        <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required placeholder={t('John', 'Jean')} />
+                        <input type="text" name="first_name" value={formData.first_name} onChange={handleInputChange} required placeholder={t('John', 'Jean')} />
                       </div>
                       <div className="form-group">
                         <label>{t('Last Name', 'Nom de Famille')} *</label>
-                        <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required placeholder={t('Doe', 'Dupont')} />
+                        <input type="text" name="last_name" value={formData.last_name} onChange={handleInputChange} required placeholder={t('Doe', 'Dupont')} />
                       </div>
                     </div>
 

@@ -17,9 +17,6 @@ public class Registration {
     @Column(name = "id", nullable = false)
     private Integer id; //
 
-    @Column(name = "user_id", nullable = false)
-    private String userId; //
-
     @Column(name = "event_id", nullable = false)
     private Integer eventId; //
 

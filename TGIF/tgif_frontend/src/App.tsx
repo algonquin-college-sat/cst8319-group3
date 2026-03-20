@@ -13,6 +13,7 @@ import Admin from './Pages/Admin';
 import AuthCallback from './Pages/AuthCallback';
 import AuthError from './Pages/AuthError';
 import NotFound from './Pages/NotFound';
+import Login from './Pages/Login';
 // MODULE_IMPORTS_START
 // MODULE_IMPORTS_END
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/history" element={<History />} />
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/volunteer" element={<Volunteer />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/error" element={<AuthError />} />

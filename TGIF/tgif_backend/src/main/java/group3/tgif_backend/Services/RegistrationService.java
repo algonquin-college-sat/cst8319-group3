@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -21,9 +20,8 @@ public class RegistrationService {
     private RegistrationRepository registrationRepository;
 
     @Transactional
-    public Registration create(RegistrationData data, String userId) {
+    public Registration create(RegistrationData data) {
         Registration reg = Registration.builder()
-                .userId(userId)
                 .eventId(data.getEventId())
                 .firstName(data.getFirstName())
                 .lastName(data.getLastName())
@@ -36,24 +34,22 @@ public class RegistrationService {
 
     // 1:1 with list_by_field
     public List<Registration> listByField(String fieldName, Object fieldValue) {
-        if ("user_id".equals(fieldName)) {
-            return registrationRepository.findByUserId((String) fieldValue);
-        } else if ("event_id".equals(fieldName)) {
+        if ("event_id".equals(fieldName)) {
             return registrationRepository.findByEventId(Integer.parseInt(fieldValue.toString()));
         }
         return registrationRepository.findAll(); // Fallback
     }
 
     @Transactional
-    public Optional<Registration> update(Integer id, RegistrationUpdateData data) {
-        return registrationRepository.findById(id).map(reg -> {
+    public Registration update(RegistrationUpdateData data) {
+            Registration reg = new Registration();
             if (data.getFirstName() != null) reg.setFirstName(data.getFirstName());
             if (data.getLastName() != null) reg.setLastName(data.getLastName());
             if (data.getEmail() != null) reg.setEmail(data.getEmail());
             if (data.getPaymentStatus() != null) reg.setPaymentStatus(data.getPaymentStatus());
             if (data.getEventId() != null) reg.setEventId(data.getEventId());
             return registrationRepository.save(reg);
-        });
+
     }
 
     @Transactional

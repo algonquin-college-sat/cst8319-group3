@@ -27,7 +27,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public Event get(@PathVariable Integer id) {
+    public Event get(@PathVariable Long id) {
         return eventService.getById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -38,13 +38,13 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public Event update(@PathVariable Integer id, @RequestBody EventData data) {
+    public Event update(@PathVariable Long id, @RequestBody EventData data) {
         return eventService.update(id, data)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable Integer id) {
+    public Map<String, Object> delete(@PathVariable Long id) {
         if (!eventService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -55,10 +55,10 @@ public class EventController {
     }
 
     @PostMapping("/batch-delete")
-    public Map<String, Object> batchDelete(@RequestBody Map<String, List<Integer>> payload) {
-        List<Integer> ids = payload.get("ids");
+    public Map<String, Object> batchDelete(@RequestBody Map<String, List<Long>> payload) {
+        List<Long> ids = payload.get("ids");
         int count = 0;
-        for (Integer id : ids) {
+        for (Long id : ids) {
             if (eventService.delete(id)) count++;
         }
         Map<String, Object> response = new HashMap<>();
