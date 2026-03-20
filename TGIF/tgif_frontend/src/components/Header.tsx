@@ -17,12 +17,12 @@ const Header: React.FC = () => {
   const isHomePage = location.pathname === '/';
 
   const navLinks: NavLink[] = [
-        { href: '/home', label_en: 'Home', label_fr: 'Accueil', isRoute: false },
+        { href: '/', label_en: 'Home', label_fr: 'Accueil', isRoute: false },
         { href: '/about', label_en: 'About', label_fr: 'À Propos', isRoute: true },
         { href: '/registration', label_en: 'Register', label_fr: 'Inscription', isRoute: true },
+        { href: '/volunteer', label_en: 'Volunteer', label_fr: 'Bénévolat', isRoute: true },
         { href: '/history', label_en: 'History', label_fr: 'Histoire', isRoute: true },
-        { href: '/sponsors', label_en: 'Sponsors', label_fr: 'Commanditaires', isRoute: true },
-        { href: '/volunteer', label_en: 'Volunteer', label_fr: 'Bénévole', isRoute: true },
+        { href: '/sponsors', label_en: 'Sponsors', label_fr: 'Commanditaires', isRoute: true }, 
         { href: '/admin', label_en: '⚙️ Admin', label_fr: '⚙️ Admin', isRoute: true },
       ];
 
