@@ -122,7 +122,7 @@ const Sponsors: React.FC = () => {
         <div className="footer-container">
           <div className="footer-bottom">
             <p>
-              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')}
+              © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')}
             </p>
           </div>
         </div>

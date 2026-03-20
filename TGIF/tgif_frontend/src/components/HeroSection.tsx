@@ -22,7 +22,7 @@ const HeroSection: React.FC = () => {
         <h1 className="hero-title">
           {t('The Great India', 'Le Grand')}
           <br />
-          <span className="hero-title-accent">{t('Festival', 'Festival Indien')}</span>
+          <span className="hero-title-accent">{t('Festival', 'Festival de l\'Inde')}</span>
         </h1>
         <p className="hero-description">
           {t(
@@ -34,8 +34,13 @@ const HeroSection: React.FC = () => {
           <a href="#events" className="hero-btn hero-btn-primary">
             {t('Explore Events', 'Explorer les Événements')}
           </a>
+        </div>
+        <div className="hero-buttons">
           <a href="#calendar" className="hero-btn hero-btn-secondary">
             {t('View Calendar', 'Voir le Calendrier')}
+          </a>
+          <a href="#speakers" className="hero-btn hero-btn-secondary">
+            {t('See Speakers', 'Voir les Intervenants')}
           </a>
         </div>
         <div className="hero-stats">

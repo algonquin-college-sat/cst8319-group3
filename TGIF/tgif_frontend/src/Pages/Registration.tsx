@@ -179,7 +179,7 @@ const Registration: React.FC = () => {
           <p>
             {t(
               'Register for your favourite events at The Great India Festival.',
-              'Inscrivez-vous à vos événements préférés au Grand Festival Indien.'
+              'Inscrivez-vous à vos événements préférés au Grand Festival de l\'Inde'
             )}
           </p>
         </div>
@@ -481,7 +481,7 @@ const Registration: React.FC = () => {
       <footer className="tgif-footer">
         <div className="footer-container">
           <div className="footer-bottom">
-            <p>© 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')}</p>
+            <p>© 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')}</p>
           </div>
         </div>
       </footer>

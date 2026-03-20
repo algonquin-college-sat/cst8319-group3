@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
             <p className="footer-brand-desc">
               {t(
                 'The Great India Festival celebrates the rich tapestry of Indian culture, bringing communities together through music, dance, art, and cuisine.',
-                'Le Grand Festival Indien célèbre la riche tapisserie de la culture indienne, rassemblant les communautés à travers la musique, la danse, l\'art et la cuisine.'
+                'Le Grand Festival de l\'Inde célèbre la riche tapisserie de la culture indienne, rassemblant les communautés à travers la musique, la danse, l\'art et la cuisine.'
               )}
             </p>
             <div className="footer-social">
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <p>
-            © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival Indien')}. {t('All rights reserved.', 'Tous droits réservés.')} {t('Made with', 'Fait avec')} <span className="footer-bottom-heart">❤</span>
+            © 2026 TGIF - {t('The Great India Festival', 'Le Grand Festival de l\'Inde')}. {t('All rights reserved.', 'Tous droits réservés.')} {t('Made with', 'Fait avec')} <span className="footer-bottom-heart">❤</span>
           </p>
         </div>
       </div>
