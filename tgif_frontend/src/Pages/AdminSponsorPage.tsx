@@ -1,15 +1,17 @@
 
 import React, { useState,useCallback, useEffect } from 'react';
 import { useLanguage } from '../Context/LanguageContext';
+import authFetch from '../Utils/auth';
 
 interface SponsorItem {
-  id: number | string;
+  id: number;
   name: string;
-  type: string;
-  desc_en: string;
-  desc_fr: string;
+  type: 'gold' | 'silver' | 'bronze'|'platinum';
+  descEn: string;
+  descFr: string;
   image_url: string;
 }
+
 
 const AdminSponsorPage: React.FC = () => {
  
@@ -22,6 +24,7 @@ const AdminSponsorPage: React.FC = () => {
   const [sponsorSearchQuery, setSponsorSearchQuery] = useState('');
   const { t } = useLanguage();
   const [token, setToken] = useState<string>(localStorage.getItem('token') || '');
+  
     // Sponsor CRUD handlers
   const handleSponsorFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setSponsorForm({ ...sponsorForm, [e.target.name]: e.target.value });
@@ -79,7 +82,7 @@ const AdminSponsorPage: React.FC = () => {
     
   const handleEditSponsor = (s: SponsorItem) => {
     setEditingSponsor(s);
-    setSponsorForm({ name: s.name, type: s.type, desc_en: s.desc_en, desc_fr: s.desc_fr, image_url: s.image_url });
+    setSponsorForm({ name: s.name, type: s.type, desc_en: s.descEn, desc_fr: s.descFr, image_url: s.image_url });
     setShowSponsorForm(true);
   };
 
@@ -110,17 +113,14 @@ const AdminSponsorPage: React.FC = () => {
   };
 
   const handleDeleteSponsor = async (id: number | string) => {
+    const params: any = {};
     try {
-      const res = await fetch(`http://localhost:8080/api/sponsors/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
+     const res = await authFetch(`http://localhost:8080/api/sponsor/${id}`, {
+     method: "DELETE",
+     params
+});
         setSponsorDeleteConfirmId(null);
         fetchSponsors();
-      } else {
-        alert(t('Error deleting sponsor', 'Erreur lors de la suppression du commanditaire'));
-      }
     } catch {
       alert(t('Error deleting sponsor', 'Erreur lors de la suppression du commanditaire'));
     }
@@ -129,7 +129,7 @@ const AdminSponsorPage: React.FC = () => {
   const filteredSponsors = sponsors.filter((s) => {
     if (!sponsorSearchQuery) return true;
     const q = sponsorSearchQuery.toLowerCase();
-    return s.name.toLowerCase().includes(q) || s.type.toLowerCase().includes(q) || s.desc_en.toLowerCase().includes(q);
+    return s.name.toLowerCase().includes(q) || s.type.toLowerCase().includes(q) || s.descEn.toLowerCase().includes(q);
   });
 
   const getSponsorTypeColor = (type: string): string => {
@@ -315,11 +315,11 @@ const AdminSponsorPage: React.FC = () => {
                           <div className="sponsor-admin-info">
                             <h4>{s.name}</h4>
                             <span className={`sponsor-tier-badge ${getSponsorTypeColor(s.type)}`}>
-                              {s.type === 'Platinum' ? '💎' : s.type === 'Gold' ? '🥇' : s.type === 'Silver' ? '🥈' : '🥉'} {s.type}
+                              {s.type === 'platinum' ? '💎' : s.type === 'gold' ? '🥇' : s.type === 'silver' ? '🥈' : '🥉'} {s.type.charAt(0).toUpperCase() + s.type.slice(1)}
                             </span>
                           </div>
                         </div>
-                        <p className="sponsor-admin-desc">{t(s.desc_en, s.desc_fr)}</p>
+                        <p className="sponsor-admin-desc">{t(s.descEn, s.descFr)}</p>
                         <div className="sponsor-admin-actions">
                           {sponsorDeleteConfirmId === s.id ? (
                             <div className="delete-confirm-group">

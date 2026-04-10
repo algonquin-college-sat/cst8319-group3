@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import { useLanguage } from '../Context/LanguageContext';
-import { createClient } from '@metagptx/web-sdk';
+import { useLanguage } from '../Context/LanguageContext'
 import '../styles/pages.css';
 import '../styles/footer.css';
 import axios from 'axios';
-import { experimental_streamedQuery } from '@tanstack/react-query';
 
-const client = createClient();
 
-interface EventData {
-  id: number;
-  title_en: string;
-  title_fr: string;
-}
 
 const Volunteer: React.FC = () => {
   const { language, t } = useLanguage();
-  const [events, setEvents] = useState<EventData[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -34,17 +25,7 @@ const Volunteer: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await client.entities.events.query({ query: {}, limit: 100, fields: ['id', 'title_en', 'title_fr'] });
-        if (res?.data?.items) setEvents(res.data.items);
-      } catch (err) {
-        console.error('Failed to fetch events:', err);
-      }
-    };
-    fetchEvents();
-  }, []);
+  
 
   const roles = [
     {
@@ -253,7 +234,7 @@ const Volunteer: React.FC = () => {
                    
                   <div className="form-group">
                     <label>{t('Full Name', 'Nom Complet')} *</label>
-                    Multiple Search/Filter Version
+                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} required placeholder={t('Enter your full name', 'Entrez votre nom complet')} />
                   </div>
 
                   <div className="form-row">

@@ -32,4 +32,9 @@ public class SponsorService {
         return sponsorRepository.save(sponsor);
 
     }
+
+
+    public void deleteById(Long id) {
+        sponsorRepository.deleteById(id);
+    }
 }

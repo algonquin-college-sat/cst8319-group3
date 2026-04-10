@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteer")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class VolunteerController {
 
     private final VolunteerService volunteerService;
@@ -41,7 +41,7 @@ public class VolunteerController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, Authentication auth) {
-        volunteerService.delete(id, auth.getName());
+    public void delete(@PathVariable Long id) {
+        volunteerService.delete(id);
     }
 }

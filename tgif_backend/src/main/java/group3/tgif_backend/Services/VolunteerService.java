@@ -70,12 +70,8 @@ public class VolunteerService {
         return mapToDTO(volunteerRepository.save(v));
     }
 
-    public void delete(Long id, String userId) {
-        Volunteer v = volunteerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Volunteer not found"));
-
-
-        volunteerRepository.delete(v);
+    public void delete(Long id) {
+        volunteerRepository.deleteById(id);
     }
 
     private VolunteerDTO mapToDTO(Volunteer v) {

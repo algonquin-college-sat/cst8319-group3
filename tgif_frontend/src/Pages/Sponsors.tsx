@@ -1,54 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { useLanguage } from '../Context/LanguageContext';
 import '../styles/pages.css';
 import '../styles/footer.css';
+import axios from 'axios';
 
 interface Sponsor {
+  id: number;
   name: string;
-  desc_en: string;
-  desc_fr: string;
-  emoji: string;
+  type: 'gold' | 'silver' | 'bronze';
+  descEn: string;
+  descFr: string;
+  image_url: string;
 }
 
 const Sponsors: React.FC = () => {
   const { t } = useLanguage();
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]); // Placeholder for sponsor data, can be fetched from an API
 
-  const goldSponsors: Sponsor[] = [
-    { name: 'Maple Spice Corp', desc_en: 'Canada\'s leading Indian spice and food brand', desc_fr: 'La marque indienne d\'épices et d\'alimentation leader au Canada', emoji: '🌶️' },
-    { name: 'Royal Bank of Canada', desc_en: 'Proud supporter of cultural diversity', desc_fr: 'Fier soutien de la diversité culturelle', emoji: '🏦' },
-    { name: 'Air India Canada', desc_en: 'Connecting cultures across continents', desc_fr: 'Connecter les cultures à travers les continents', emoji: '✈️' },
-  ];
+  
 
-  const silverSponsors: Sponsor[] = [
-    { name: 'Bollywood Studios', desc_en: 'Entertainment and media production', desc_fr: 'Production de divertissement et de médias', emoji: '🎬' },
-    { name: 'Namaste Wellness', desc_en: 'Yoga and wellness products', desc_fr: 'Produits de yoga et de bien-être', emoji: '🧘' },
-    { name: 'Desi Tech Solutions', desc_en: 'Technology consulting and services', desc_fr: 'Consultation et services technologiques', emoji: '💻' },
-    { name: 'Saffron Textiles', desc_en: 'Traditional and modern Indian fashion', desc_fr: 'Mode indienne traditionnelle et moderne', emoji: '👗' },
-  ];
-
-  const bronzeSponsors: Sponsor[] = [
-    { name: 'Chai & Co.', desc_en: 'Artisanal tea and beverages', desc_fr: 'Thé et boissons artisanaux', emoji: '☕' },
-    { name: 'Rangoli Designs', desc_en: 'Interior design and decor', desc_fr: 'Design d\'intérieur et décoration', emoji: '🎨' },
-    { name: 'Mumbai Street Eats', desc_en: 'Authentic Indian street food', desc_fr: 'Cuisine de rue indienne authentique', emoji: '🍛' },
-    { name: 'Ganges Travel', desc_en: 'Travel and tourism services', desc_fr: 'Services de voyage et de tourisme', emoji: '🌍' },
-    { name: 'Lotus Media', desc_en: 'Digital marketing agency', desc_fr: 'Agence de marketing numérique', emoji: '📱' },
-  ];
-
-  const renderSponsorTier = (sponsors: Sponsor[], tier: string, icon: string, label_en: string, label_fr: string) => (
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get('http://localhost:8080/api/sponsor');// Replace with actual API endpoint
+        setSponsors(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }; fetchEvent();
+   }, [])
+   
+  const goldSponsors = sponsors.filter((sponsor) => sponsor.type === 'gold');
+  const silverSponsors = sponsors.filter((sponsor) => sponsor.type === 'silver');
+  const bronzeSponsors = sponsors.filter((sponsor) => sponsor.type === 'bronze');
+    
+  const renderSponsorTier = (sponsorsList: Sponsor[], tier: string, icon: string, label_en: string, label_fr: string) => (
     <div className="sponsors-tier">
       <div className="sponsors-tier-header">
         <span className="tier-icon">{icon}</span>
         <h3>{t(label_en, label_fr)}</h3>
       </div>
       <div className="sponsors-grid">
-        {sponsors.map((sponsor, index) => (
-          <div key={index} className={`sponsor-card ${tier}`}>
-            <div className="sponsor-logo">{sponsor.emoji}</div>
+        {sponsorsList.map((sponsor) => (
+          <div key={sponsor.id} className={`sponsor-card ${tier}`}>
+            <div className="sponsor-logo">{sponsor.image_url}</div>
             <div className="sponsor-info">
               <h4>{sponsor.name}</h4>
-              <p>{t(sponsor.desc_en, sponsor.desc_fr)}</p>
+              <p>{t(sponsor.descEn, sponsor.descFr)}</p>
             </div>
           </div>
         ))}
@@ -92,9 +92,10 @@ const Sponsors: React.FC = () => {
             </p>
           </div>
 
-          {renderSponsorTier(goldSponsors, 'gold', '🥇', 'Gold Sponsors', 'Commanditaires Or')}
-          {renderSponsorTier(silverSponsors, 'silver', '🥈', 'Silver Sponsors', 'Commanditaires Argent')}
-          {renderSponsorTier(bronzeSponsors, 'bronze', '🥉', 'Bronze Sponsors', 'Commanditaires Bronze')}
+            {renderSponsorTier(goldSponsors, 'gold', '🥇', 'Gold Sponsors', 'Commanditaires Or')}
+            {renderSponsorTier(silverSponsors, 'silver', '🥈', 'Silver Sponsors', 'Commanditaires Argent')}
+            {renderSponsorTier(bronzeSponsors, 'bronze', '🥉', 'Bronze Sponsors', 'Commanditaires Bronze')}
+
 
           {/* CTA */}
           <div className="sponsors-cta">

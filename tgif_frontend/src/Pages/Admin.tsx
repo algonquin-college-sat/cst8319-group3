@@ -45,14 +45,14 @@ interface RegistrationItem {
 
 interface VolunteerItem {
   id: number;
-  user_id: string;
-  event_id: number;
   name: string;
   email: string;
   phone?: string;
   role?: string;
-  created_at?: string;
-  event_title?: string;
+  availability?: string;
+  experience?: string;
+  reason: string;
+  event: string;
 }
 
 interface DashboardStats {
@@ -170,24 +170,22 @@ const fetchDashboard = useCallback(async () => {
 }, [filterEventId]);
 
 
-const fetchVolunteers = useCallback(async () => {
-  try {
-
+  const fetchVolunteers = useCallback(async () => {
+  
     const params: any = {};
-    if (filterEventId) params.event_id = filterEventId;
-
-    const res = await authFetch("http://localhost:8080/api/admin/volunteers", {
+  try {
+    const res = await authFetch("http://localhost:8080/api/volunteer/all", {
       method: "GET",
       params
     });
-
-    setVolunteers(Array.isArray(res.data) ? res.data : []);
+    console.log("Volunteers response:", res);
+    setVolunteers(res.data);
 
   } catch (err) {
     console.error('Failed to fetch volunteers:', err);
     setVolunteers([]); // fallback
   }
-}, [filterEventId]);
+}, []);
 
   useEffect(() => {
     if (!user || user.role !== 'admin') return;
@@ -197,10 +195,8 @@ const fetchVolunteers = useCallback(async () => {
     } else if (activeTab === 'events') {
       fetchEvents();
     } else if (activeTab === 'registrations') {
-      fetchEvents();
       fetchRegistrations();
     } else if (activeTab === 'volunteers') {
-      fetchEvents();
       fetchVolunteers();
     } 
   }, [user, activeTab, fetchDashboard, fetchEvents, fetchRegistrations, fetchVolunteers]);
@@ -647,8 +643,9 @@ const fetchVolunteers = useCallback(async () => {
                         <th>{t('Email', 'Courriel')}</th>
                         <th>{t('Phone', 'Téléphone')}</th>
                         <th>{t('Role', 'Rôle')}</th>
+                        <th>{t('Availability', 'Disponibilité')}</th>
                         <th>{t('Event', 'Événement')}</th>
-                        <th>{t('Date', 'Date')}</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -659,8 +656,8 @@ const fetchVolunteers = useCallback(async () => {
                           <td>{vol.email}</td>
                           <td>{vol.phone || '—'}</td>
                           <td>{vol.role || '—'}</td>
-                          <td>{vol.event_title || `Event #${vol.event_id}`}</td>
-                          <td>{vol.created_at ? new Date(vol.created_at).toLocaleDateString() : '—'}</td>
+                          <td>{vol.availability || '—'}</td>
+                          <td>{vol.event || '— '}</td>
                         </tr>
                       ))}
                     </tbody>
