@@ -19,11 +19,11 @@ const Header: React.FC = () => {
   const navLinks: NavLink[] = [
         { href: '/', label_en: 'Home', label_fr: 'Accueil', isRoute: true },
         { href: '/about', label_en: 'About', label_fr: 'À Propos', isRoute: true },
-        { href: '/registration', label_en: 'Register', label_fr: 'Inscription', isRoute: true },
+       // { href: '/registration', label_en: 'Register', label_fr: 'Inscription', isRoute: true },
         { href: '/history', label_en: 'History', label_fr: 'Histoire', isRoute: true },
         { href: '/sponsors', label_en: 'Sponsors', label_fr: 'Commanditaires', isRoute: true },
         { href: '/volunteer', label_en: 'Volunteer', label_fr: 'Bénévole', isRoute: true },
-        { href: '/admin', label_en: '⚙️ Admin', label_fr: '⚙️ Admin', isRoute: true },
+        //{ href: '/admin', label_en: '⚙️ Admin', label_fr: '⚙️ Admin', isRoute: true },
       ];
 
   return (
