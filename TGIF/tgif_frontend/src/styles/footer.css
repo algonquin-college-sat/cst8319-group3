@@ -1,8 +1,9 @@
 /* ===== FOOTER ===== */
 .tgif-footer {
-  background: #1A1A2E;
+  /* background: #1A1A2E; */
+  background: linear-gradient(0deg, #7272bb, #1A1A2E);
   padding: 60px 0 0;
-  border-top: 2px solid rgba(255, 215, 0, 0.15);
+  border-top: 2px solid #1A1A2E;
 }
 
 .footer-container {

@@ -16,7 +16,6 @@ const HeroSection: React.FC = () => {
       ></div>
       <div className="hero-content">
         <div className="hero-badge">
-          <span>🪔</span>
           <span>{t('Celebrating Indian Culture', 'Célébrer la Culture Indienne')}</span>
         </div>
         <h1 className="hero-title">

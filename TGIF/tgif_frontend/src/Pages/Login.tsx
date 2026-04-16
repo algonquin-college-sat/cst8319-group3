@@ -43,8 +43,7 @@ const Login: React.FC = () => {
           <div className="login-branding-content">
             <Link to="/" className="login-logo-link">
               <div className="login-logo">
-                <span className="login-logo-icon">🪔</span>
-                <span className="login-logo-text">TGIF</span>
+                <span className="image_span"><img  width="380" src="..\src\assets\Great-India-Festival.png"></img></span>
               </div>
             </Link>
             <h1 className="login-branding-title">

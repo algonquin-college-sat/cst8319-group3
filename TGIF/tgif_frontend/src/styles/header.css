@@ -5,7 +5,8 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(26, 26, 46, 0.95);
+  /* background: rgba(26, 26, 46, 0.95); */
+  background: linear-gradient(360deg, rgb(112, 62, 13), rgba(26, 26, 46, 0.95));
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 215, 0, 0.15);
   transition: all 0.3s ease;
@@ -26,6 +27,12 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
+}
+
+.image_span img {
+  max-width: 400px;
+  max-height: 120px;
+  padding: 0;
 }
 
 .logo-icon {

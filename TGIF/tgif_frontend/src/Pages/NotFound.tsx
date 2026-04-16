@@ -15,7 +15,9 @@ export default function NotFound() {
       padding: '24px',
       textAlign: 'center',
     }}>
-      <span style={{ fontSize: '64px', marginBottom: '16px' }}>🪔</span>
+      <span style={{ fontSize: '64px', 
+        position: "relative", left: "40px", top: "15px",
+        marginBottom: '16px' }}><img src="..\src\assets\Great-India-Festival.png"></img></span>
       <h1 style={{
         fontFamily: "'Playfair Display', serif",
         fontSize: '48px',

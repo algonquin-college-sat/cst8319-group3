@@ -18,7 +18,7 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(26, 26, 46, 0.95) 0%,
+    rgb(112, 62, 13) 0%,
     rgba(26, 26, 46, 0.88) 50%,
     rgba(26, 26, 46, 0.95) 100%
   );
@@ -39,7 +39,7 @@
   color: #FFD700;
 }
 
-.section-title-light {
+.section-title-light h2 {
   color: #FFFFFF;
 }
 

@@ -17,8 +17,7 @@ const Footer: React.FC = () => {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="footer-logo">
-              <span className="footer-logo-icon">🪔</span>
-              <span className="footer-logo-text">TGIF</span>
+              <span className="image_span"><img src="..\src\assets\Great-India-Festival.png"></img></span>
             </div>
             <p className="footer-brand-desc">
               {t(
@@ -27,9 +26,9 @@ const Footer: React.FC = () => {
               )}
             </p>
             <div className="footer-social">
-              <a href="https://instagram.com" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📷</a>
-              <a href="https://facebook.com" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">📘</a>
-              <a href="https://youtube.com" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶️</a>
+              <a href="https://www.instagram.com/tgifottawa" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">📷</a>
+              <a href="https://www.facebook.com/groups/tgifOttawa" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">📘</a>
+              <a href="https://www.youtube.com/c/tgifottawa/videos" className="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">▶️</a>
             </div>
           </div>
 

@@ -78,7 +78,8 @@
 
 /* Left Panel - Branding */
 .login-branding {
-  background: linear-gradient(160deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+  /* background: linear-gradient(160deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%); */
+  background: linear-gradient(60deg, #1A1A2E, #FF6B00);
   padding: 48px 40px;
   display: flex;
   flex-direction: column;

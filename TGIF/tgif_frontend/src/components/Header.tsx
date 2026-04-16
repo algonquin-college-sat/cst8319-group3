@@ -26,15 +26,11 @@ const Header: React.FC = () => {
         { href: '/admin', label_en: '⚙️ Admin', label_fr: '⚙️ Admin', isRoute: true },
       ];
 
-  return (
+  return ( 
     <header className="tgif-header">
       <div className="header-container">
         <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
-          <span className="logo-icon">🪔</span>
-          <div className="logo-text">
-            <span className="logo-title">TGIF</span>
-            <span className="logo-subtitle">{t('The Great India Festival', 'Le Grand Festival de l\'Inde')}</span>
-          </div>
+          <span className="image_span"><img src="..\src\assets\Great-India-Festival.png"></img></span>
         </Link>
 
         <nav className={`header-nav ${mobileMenuOpen ? 'nav-open' : ''}`}>

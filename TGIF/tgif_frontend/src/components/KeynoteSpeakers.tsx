@@ -22,7 +22,7 @@ const KeynoteSpeakers: React.FC = () => {
       <div className="section-container speakers-content">
         <div className="section-header section-header-light">
           <span className="section-tag section-tag-light">{t('Featured Artists & Speakers', 'Artistes et Conférenciers en Vedette')}</span>
-          <h2 className="section-title section-title-light">
+          <h2 className="section-title-light">
             {t('Meet Our Keynote Speakers', 'Rencontrez Nos Conférenciers')}
           </h2>
           <p className="section-description section-desc-light">

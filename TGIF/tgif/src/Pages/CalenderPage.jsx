@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getAllEvents } from "../Services/eventService";
-import "./CalenderPage.css";
+import "./CalendarPage.css";
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
